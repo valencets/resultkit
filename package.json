@@ -1,0 +1,45 @@
+{
+  "name": "resultkit",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Opinionated, minimal Result monad for TypeScript. Railway-oriented programming with Ok, Err, map, andThen, match.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "validate": "tsc --noEmit && eslint .",
+    "prepublishOnly": "npm run validate && npm run build"
+  },
+  "keywords": [
+    "result",
+    "monad",
+    "typescript",
+    "railway",
+    "ok",
+    "err",
+    "functional",
+    "error-handling"
+  ],
+  "author": "Forrest",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.0",
+    "neostandard": "^0.12.0",
+    "typescript": "^5.9.0",
+    "vitest": "^4.0.0"
+  }
+}
