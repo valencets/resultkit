@@ -1,5 +1,5 @@
 {
-  "name": "resultkit",
+  "name": "@valencets/resultkit",
   "version": "0.1.0",
   "type": "module",
   "description": "Opinionated, minimal Result monad for TypeScript. Railway-oriented programming with Ok, Err, map, andThen, match.",
