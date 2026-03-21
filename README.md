@@ -55,14 +55,14 @@ If you need them, use neverthrow. resultkit is for teams that want less, not mor
 ## Install
 
 ```bash
-npm install resultkit
+npm install @valencets/resultkit
 ```
 
 ## Quick Start
 
 ```typescript
-import { ok, err, fromThrowable } from 'resultkit'
-import type { Result } from 'resultkit'
+import { ok, err, fromThrowable } from '@valencets/resultkit'
+import type { Result } from '@valencets/resultkit'
 
 // Define your error type
 interface AppError {
@@ -95,8 +95,8 @@ result.match(
 ### Sync Results
 
 ```typescript
-import { ok, err } from 'resultkit'
-import type { Result } from 'resultkit'
+import { ok, err } from '@valencets/resultkit'
+import type { Result } from '@valencets/resultkit'
 
 // Construction
 const success = ok(42)          // Ok<number, never>
@@ -136,7 +136,7 @@ ok(5).unwrapOr(42)             // 5
 ### Async Results
 
 ```typescript
-import { okAsync, errAsync, ResultAsync } from 'resultkit'
+import { okAsync, errAsync, ResultAsync } from '@valencets/resultkit'
 
 // Wrap promises that might reject
 const fetchUser = (id: number) =>
@@ -168,7 +168,7 @@ const asyncResult = ok(5).toAsync()  // ResultAsync<number, never>
 ### Wrapping Throwing Code
 
 ```typescript
-import { fromThrowable } from 'resultkit'
+import { fromThrowable } from '@valencets/resultkit'
 
 // Wrap any function that might throw
 const safeJsonParse = fromThrowable(
@@ -189,8 +189,8 @@ safeParse('bad')  // Result<any, unknown>
 Chain operations and let errors propagate automatically:
 
 ```typescript
-import { ok, err, ResultAsync } from 'resultkit'
-import type { Result } from 'resultkit'
+import { ok, err, ResultAsync } from '@valencets/resultkit'
+import type { Result } from '@valencets/resultkit'
 
 interface DbError { readonly code: string; readonly message: string }
 interface User { readonly id: number; readonly name: string; readonly email: string }
@@ -230,7 +230,7 @@ await result.match(
 ### Type Inference Helpers
 
 ```typescript
-import type { InferOkType, InferErrType, Result } from 'resultkit'
+import type { InferOkType, InferErrType, Result } from '@valencets/resultkit'
 
 type MyResult = Result<number, string>
 
@@ -277,6 +277,14 @@ All methods are available on both `Result` and `ResultAsync` (async versions ret
 3. **Zero dependencies.** Your supply chain is your attack surface.
 4. **Type safety without casts.** No `as unknown as` anywhere in the implementation.
 5. **Boundary isolation.** `try/catch` exists in exactly one place: `fromThrowable`.
+
+## Contracts
+
+**`.map()` and `.mapErr()` mappers must not throw.** These methods are for infallible transforms. If a mapper throws (sync) or rejects (async), the exception propagates as an unhandled rejection rather than being captured as an `Err`. Use `.andThen()` with `fromThrowable` for fallible operations.
+
+**`fromThrowable` `errorFn` must not throw.** The `errorFn` mapper runs inside the `catch` block. If `errorFn` itself throws, that exception escapes the boundary. Keep `errorFn` pure — simple object construction like `(e) => ({ code: 'FAILED', message: String(e) })`.
+
+**`ResultAsync.fromSafePromise` callers guarantee the promise never rejects.** If the promise rejects, the rejection propagates as an unhandled rejection rather than being captured as an `Err`. Use `ResultAsync.fromPromise` with an `errorFn` for promises that might reject.
 
 ## Requirements
 
