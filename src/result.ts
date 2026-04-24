@@ -37,6 +37,15 @@ export class Ok<T, E> {
     return okFn(this.value)
   }
 
+  tap (fn: (value: T) => void): this {
+    fn(this.value)
+    return this
+  }
+
+  tapErr (_fn: (error: E) => void): this {
+    return this
+  }
+
   unwrapOr<A> (_defaultValue: A): T | A {
     return this.value
   }
@@ -88,6 +97,15 @@ export class Err<T, E> {
 
   match<A, B = A> (_okFn: (value: T) => A, errFn: (error: E) => B): A | B {
     return errFn(this.error)
+  }
+
+  tap (_fn: (value: T) => void): this {
+    return this
+  }
+
+  tapErr (fn: (error: E) => void): this {
+    fn(this.error)
+    return this
   }
 
   unwrapOr<A> (defaultValue: A): T | A {
