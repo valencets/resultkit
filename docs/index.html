@@ -88,12 +88,12 @@ html { scroll-behavior: smooth; scroll-padding-top: 56px; }
 ::-webkit-scrollbar-thumb { background: #32353b; }
 ::-webkit-scrollbar-thumb:hover { background: #414752; }
 .side-link {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 12px; color: #8b919d;
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px; color: #8b919d;
   transition: none;
 }
 .side-link:hover, .side-link.active { color: #e0e2ea; background: #181c21; }
-.side-link.active { border-left: 2px solid #58a6ff; color: #58a6ff; padding-left: 10px; }
+.side-link.active { border-left: 2px solid #58a6ff; color: #58a6ff; padding-left: 12px; }
 </style>
 </head>
 
@@ -117,7 +117,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 56px; }
 </nav>
 
 <!-- SideNavBar -->
-<aside class="fixed left-0 top-12 h-[calc(100vh-64px)] w-56 z-40 flex-col bg-[#0D1117] border-r border-[#30363D] hidden md:flex">
+<aside class="fixed left-0 top-12 h-[calc(100vh-48px)] w-64 z-40 flex-col bg-[#0D1117] border-r border-[#30363D] hidden md:flex">
   <div class="px-4 py-3 border-b border-[#30363D]">
     <h2 class="font-mono text-[10px] uppercase text-primary-container font-bold tracking-widest">Navigation</h2>
     <p class="font-mono text-[10px] text-outline mt-1">@valencets/resultkit</p>
@@ -155,7 +155,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 56px; }
 </aside>
 
 <!-- Main Content -->
-<main class="flex-1 md:ml-56 mt-12 mb-6 p-4 grid grid-cols-12 gap-[1px] bg-outline-variant relative">
+<main class="flex-1 md:ml-64 mt-12 mb-6 p-4 grid grid-cols-12 gap-[1px] bg-outline-variant relative">
 
   <!-- Hero -->
   <section id="hero" class="col-span-12 bg-surface-dim relative scanlines min-h-[380px] flex flex-col justify-center items-center p-16">
@@ -395,7 +395,7 @@ result.<span class="fn">match</span>({
   <section id="api" class="col-span-12 bg-surface border border-outline-variant flex flex-col">
     <header class="bg-surface-container-highest h-9 flex items-center px-5 border-b border-outline-variant justify-between shrink-0">
       <span class="font-label text-label-caps uppercase tracking-widest text-on-surface-variant">API reference</span>
-      <span class="font-label text-label-caps uppercase tracking-widest text-primary-container">v0.3.0</span>
+      <a href="api.html" class="font-label text-label-caps uppercase tracking-widest text-primary-container hover:text-on-surface transition-colors">Full docs →</a>
     </header>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-[1px] bg-outline-variant">
 
