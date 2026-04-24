@@ -133,6 +133,16 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     return errFn(result.error)
   }
 
+  async unwrap (): Promise<T> {
+    const result = await this._promise
+    return result.unwrap()
+  }
+
+  async unwrapErr (): Promise<E> {
+    const result = await this._promise
+    return result.unwrapErr()
+  }
+
   async unwrapOr<A> (defaultValue: A): Promise<T | A> {
     const result = await this._promise
     if (result.isOk()) {
