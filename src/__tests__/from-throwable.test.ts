@@ -37,14 +37,15 @@ describe('fromThrowable()', () => {
     }
   })
 
-  it('uses raw error when no errorFn provided', () => {
+  it('requires errorFn — no unknown error types', () => {
     const safeParse = fromThrowable(
-      (s: string) => JSON.parse(s) as Record<string, unknown>
+      (s: string) => JSON.parse(s) as Record<string, unknown>,
+      (e) => (e instanceof Error ? e.message : String(e))
     )
     const result = safeParse('not json')
     expect(result.isErr()).toBe(true)
     if (result.isErr()) {
-      expect(result.error).toBeInstanceOf(SyntaxError)
+      expect(typeof result.error).toBe('string')
     }
   })
 

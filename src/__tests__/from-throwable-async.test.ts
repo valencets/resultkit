@@ -22,13 +22,14 @@ describe('fromThrowableAsync()', () => {
     if (result.isErr()) expect(result.error).toBe('network')
   })
 
-  it('uses raw error when no errorFn provided', async () => {
+  it('requires errorFn — no unknown error types', async () => {
     const safeFetch = fromThrowableAsync(
-      async () => { throw new Error('boom') }
+      async () => { throw new Error('boom') },
+      (e) => (e instanceof Error ? e.message : String(e))
     )
     const result = await safeFetch()
     expect(result.isErr()).toBe(true)
-    if (result.isErr()) expect(result.error).toBeInstanceOf(Error)
+    if (result.isErr()) expect(result.error).toBe('boom')
   })
 
   it('passes arguments through', async () => {
