@@ -217,7 +217,7 @@ export default [
 - TypeScript >= 5.9
 - ESM only (`"type": "module"`)
 
-The Node 22 floor tracks Valence's internal stack, not a technical constraint — the source compiles to ES2022 with no `node:` imports. Projects on Node 20 LTS can use resultkit by overriding the `engines` field; nothing at runtime requires Node 22 specifically.
+The Node 22 floor tracks the [Node.js release schedule](https://github.com/nodejs/release#release-schedule): Node 20 reached end-of-life in April 2026, so 22 is the oldest line still receiving security patches. The source itself has no Node 22-specific requirement — it compiles to ES2022 with no `node:` imports — so projects still on 20 can override the `engines` field at their own risk.
 
 ## License
 
