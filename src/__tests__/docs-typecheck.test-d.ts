@@ -1,6 +1,6 @@
 import { describe, it, expectTypeOf } from 'vitest'
-import { ok, err, fromThrowable, fromNullable, combine, match, ResultError, isResultError, okAsync, ResultAsync } from '../index.js'
-import type { Result, InferOkType, InferErrType, ResultJSON } from '../index.js'
+import { ok, err, fromThrowable, fromNullable, combine, match, ResultError, isResultError, ResultAsync } from '../index.js'
+import type { Result, InferOkType, InferErrType } from '../index.js'
 
 describe('docs type claims', () => {
   it('ok returns Ok<T, never>', () => {
