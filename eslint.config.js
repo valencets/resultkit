@@ -77,7 +77,7 @@ export default [
   },
   // result-async.ts catches user callback throws to prevent unhandled rejections
   {
-    files: ['src/result-async.ts'],
+    files: ['src/result-async.ts', 'src/from-throwable-async.ts'],
     rules: {
       'no-restricted-syntax': [
         'error',
