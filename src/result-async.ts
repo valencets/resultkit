@@ -104,6 +104,24 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     )
   }
 
+  tap (fn: (value: T) => void): ResultAsync<T, E> {
+    return new ResultAsync(
+      this._promise.then((result) => {
+        if (result.isOk()) fn(result.value)
+        return result
+      })
+    )
+  }
+
+  tapErr (fn: (error: E) => void): ResultAsync<T, E> {
+    return new ResultAsync(
+      this._promise.then((result) => {
+        if (result.isErr()) fn(result.error)
+        return result
+      })
+    )
+  }
+
   async match<A, B = A> (
     okFn: (value: T) => A,
     errFn: (error: E) => B
