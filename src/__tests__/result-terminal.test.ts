@@ -63,7 +63,7 @@ describe('.unwrap()', () => {
   it('throws for Err with the error value as cause', () => {
     const thrown = (() => { try { err('bad').unwrap(); return null } catch (e) { return e } })()
     expect(thrown).toBeInstanceOf(Error)
-    expect((thrown as Error).message).toBe('Called unwrap on an Err value')
+    expect((thrown as Error).message).toBe('Called unwrap on an Err value: bad')
     expect((thrown as Error).cause).toBe('bad')
   })
 
