@@ -33,8 +33,14 @@ export class Ok<T, E> {
     return this as unknown as Ok<T, F>
   }
 
-  match<A, B = A> (okFn: (value: T) => A, _errFn: (error: E) => B): A | B {
-    return okFn(this.value)
+  match<A, B = A> (okFn: (value: T) => A, _errFn: (error: E) => B): A | B
+  match<A, B = A> (handlers: { ok: (value: T) => A, err: (error: E) => B }): A | B
+  match<A, B = A> (
+    okFnOrHandlers: ((value: T) => A) | { ok: (value: T) => A, err: (error: E) => B },
+    _errFn?: (error: E) => B
+  ): A | B {
+    if (typeof okFnOrHandlers === 'function') return okFnOrHandlers(this.value)
+    return okFnOrHandlers.ok(this.value)
   }
 
   tap (fn: (value: T) => void): this {
@@ -95,8 +101,14 @@ export class Err<T, E> {
     return fn(this.error)
   }
 
-  match<A, B = A> (_okFn: (value: T) => A, errFn: (error: E) => B): A | B {
-    return errFn(this.error)
+  match<A, B = A> (_okFn: (value: T) => A, errFn: (error: E) => B): A | B
+  match<A, B = A> (handlers: { ok: (value: T) => A, err: (error: E) => B }): A | B
+  match<A, B = A> (
+    okFnOrHandlers: ((value: T) => A) | { ok: (value: T) => A, err: (error: E) => B },
+    errFn?: (error: E) => B
+  ): A | B {
+    if (typeof okFnOrHandlers === 'function') return errFn!(this.error)
+    return okFnOrHandlers.err(this.error)
   }
 
   tap (_fn: (value: T) => void): this {

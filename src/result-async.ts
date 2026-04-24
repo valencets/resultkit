@@ -125,12 +125,19 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
   async match<A, B = A> (
     okFn: (value: T) => A,
     errFn: (error: E) => B
+  ): Promise<A | B>
+  async match<A, B = A> (
+    handlers: { ok: (value: T) => A, err: (error: E) => B }
+  ): Promise<A | B>
+  async match<A, B = A> (
+    okFnOrHandlers: ((value: T) => A) | { ok: (value: T) => A, err: (error: E) => B },
+    errFn?: (error: E) => B
   ): Promise<A | B> {
     const result = await this._promise
-    if (result.isOk()) {
-      return okFn(result.value)
+    if (typeof okFnOrHandlers === 'function') {
+      return result.isOk() ? okFnOrHandlers(result.value) : errFn!(result.error)
     }
-    return errFn(result.error)
+    return result.isOk() ? okFnOrHandlers.ok(result.value) : okFnOrHandlers.err(result.error)
   }
 
   async unwrap (): Promise<T> {
