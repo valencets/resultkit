@@ -29,8 +29,8 @@ describe('ResultError', () => {
 
     const error: AppError = new ResultError('NOT_FOUND', 'missing')
     const result = matchOn(error, 'code', {
-      NOT_FOUND: (e) => `missing: ${e.message}`,
-      TIMEOUT: (e) => `slow: ${e.message}`
+      NOT_FOUND: (e: ResultError<'NOT_FOUND'>) => `missing: ${e.message}`,
+      TIMEOUT: (e: ResultError<'TIMEOUT'>) => `slow: ${e.message}`
     })
     expect(result).toBe('missing: missing')
   })

@@ -7,6 +7,7 @@ export { fromThrowableAsync } from './from-throwable-async.js'
 export { combine, combineAsync } from './combine.js'
 export type { InferOkType, InferErrType } from './types.js'
 export { match, matchOn } from './match.js'
+export { ResultError, isResultError } from './result-error.js'
 export type {
   MatchHandlers,
   MatchHandlersPartial,
