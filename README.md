@@ -98,8 +98,10 @@ All methods are available on `Ok`, `Err`, and `ResultAsync`.
 
 | Function | Description |
 |----------|-------------|
-| `combine(results)` | `Result<T, E>[]` → `Result<T[], E>` — first Err wins |
-| `combineAsync(results)` | `ResultAsync<T, E>[]` → `ResultAsync<T[], E>` |
+| `combine(results)` | `Result[]` → `Result<[T1, T2, ...], E1 \| E2 \| ...>` — tuple-aware, first Err wins |
+| `combineAsync(results)` | Async variant of `combine` |
+| `partition(results)` | `Result<T, E>[]` → `[T[], E[]]` — split into ok/err arrays |
+| `flatten(result)` | `Result<Result<T, E2>, E1>` → `Result<T, E1 \| E2>` |
 
 ### Pattern Matching
 
@@ -130,6 +132,41 @@ matchOn(error, 'code', {
   NOT_FOUND: (e) => `Missing: ${e.path}`,   // e is { code: 'NOT_FOUND', path: string }
   TIMEOUT: (e) => `Waited ${e.ms}ms`        // e is { code: 'TIMEOUT', ms: number }
 })
+```
+
+### Serialization
+
+```typescript
+import { resultToJSON, resultFromJSON } from '@valencets/resultkit'
+
+const json = resultToJSON(ok(42))     // { _tag: 'Ok', value: 42 }
+const wire = JSON.stringify(json)      // send across process boundary
+const result = resultFromJSON(JSON.parse(wire))  // back to Result
+```
+
+### Branded Errors
+
+```typescript
+import { ResultError, isResultError, matchOn, err } from '@valencets/resultkit'
+
+type AppError =
+  | ResultError<'NOT_FOUND'>
+  | ResultError<'TIMEOUT'>
+  | ResultError<'VALIDATION'>
+
+const error = new ResultError('NOT_FOUND', 'User not found', { userId: 123 })
+
+// Works with matchOn — code is the discriminant
+matchOn(error, 'code', {
+  NOT_FOUND: (e) => `Missing: ${e.message}`,
+  TIMEOUT: (e) => `Slow: ${e.message}`,
+  VALIDATION: (e) => `Bad input: ${e.message}`
+})
+
+// Type guard for unknown → ResultError narrowing
+if (isResultError(caught)) {
+  console.log(caught.code, caught.context)
+}
 ```
 
 ### Type Helpers

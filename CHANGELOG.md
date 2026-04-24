@@ -16,6 +16,12 @@
 - **`fromThrowableAsync(fn, errorFn)`** wraps async throwing functions into `ResultAsync`.
 - **`unwrap()` / `unwrapErr()`** on `ResultAsync` for API parity with sync Result.
 - **Eslint preset** shipped as `@valencets/resultkit/eslint` with `strict` and `recommended` configs.
+- **`ResultError<Code>`** branded error base type with `code` discriminant, designed for `matchOn('code', ...)`.
+- **`isResultError()`** type guard for unknown-to-ResultError narrowing.
+- **`partition(results)`** splits `Result[]` into `[ok[], err[]]`.
+- **`flatten(result)`** unwraps `Result<Result<T, E2>, E1>` → `Result<T, E1 | E2>`.
+- **`resultToJSON(result)`** / **`resultFromJSON(json)`** for cross-boundary serialization.
+- **GitHub Actions CI** — validate, test, build on Node 22/23.
 
 ### Bug Fixes
 
@@ -27,6 +33,10 @@
 ### Performance
 
 - `Ok.mapErr`, `Ok.orElse`, `Err.map`, `Err.andThen` return `this` instead of allocating new instances.
+
+### Internal
+
+- Eslint config exemptions for internal error boundaries (`match.ts`, `result-async.ts`, `from-throwable.ts`).
 
 ## 0.2.0
 
