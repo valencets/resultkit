@@ -60,8 +60,21 @@ describe('.unwrap()', () => {
     expect(ok(5).unwrap()).toBe(5)
   })
 
-  it('throws for Err', () => {
-    expect(() => err('bad').unwrap()).toThrow('Called unwrap on an Err value')
+  it('throws for Err with the error value as cause', () => {
+    const thrown = (() => { try { err('bad').unwrap(); return null } catch (e) { return e } })()
+    expect(thrown).toBeInstanceOf(Error)
+    expect((thrown as Error).message).toBe('Called unwrap on an Err value')
+    expect((thrown as Error).cause).toBe('bad')
+  })
+
+  it('includes string error in message', () => {
+    expect(() => err('bad').unwrap()).toThrow('Called unwrap on an Err value: bad')
+  })
+
+  it('includes object error as cause', () => {
+    const errObj = { code: 'NOT_FOUND' }
+    const thrown = (() => { try { err(errObj).unwrap(); return null } catch (e) { return e } })()
+    expect((thrown as Error).cause).toEqual({ code: 'NOT_FOUND' })
   })
 })
 
@@ -70,7 +83,10 @@ describe('.unwrapErr()', () => {
     expect(err('bad').unwrapErr()).toBe('bad')
   })
 
-  it('throws for Ok', () => {
-    expect(() => ok(5).unwrapErr()).toThrow('Called unwrapErr on an Ok value')
+  it('throws for Ok with the value as cause', () => {
+    const thrown = (() => { try { ok(5).unwrapErr(); return null } catch (e) { return e } })()
+    expect(thrown).toBeInstanceOf(Error)
+    expect((thrown as Error).message).toBe('Called unwrapErr on an Ok value')
+    expect((thrown as Error).cause).toBe(5)
   })
 })
