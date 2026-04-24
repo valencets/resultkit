@@ -65,6 +65,40 @@ describe('ResultAsync.fromSafePromise()', () => {
   })
 })
 
+describe('error capture in callbacks', () => {
+  it('map captures synchronous throw as rejected promise', async () => {
+    const result = await okAsync(5).map(() => { throw new Error('boom') })
+    expect(result.isErr()).toBe(true)
+    if (result.isErr()) {
+      expect(result.error).toBeInstanceOf(Error)
+    }
+  })
+
+  it('mapErr captures synchronous throw as rejected promise', async () => {
+    const result = await errAsync('bad').mapErr(() => { throw new Error('boom') })
+    expect(result.isErr()).toBe(true)
+    if (result.isErr()) {
+      expect(result.error).toBeInstanceOf(Error)
+    }
+  })
+
+  it('andThen captures synchronous throw as Err', async () => {
+    const result = await okAsync(5).andThen(() => { throw new Error('boom') })
+    expect(result.isErr()).toBe(true)
+    if (result.isErr()) {
+      expect(result.error).toBeInstanceOf(Error)
+    }
+  })
+
+  it('orElse captures synchronous throw as Err', async () => {
+    const result = await errAsync('bad').orElse(() => { throw new Error('boom') })
+    expect(result.isErr()).toBe(true)
+    if (result.isErr()) {
+      expect(result.error).toBeInstanceOf(Error)
+    }
+  })
+})
+
 describe('PromiseLike conformance', () => {
   it('can be awaited directly', async () => {
     const result = await okAsync(99)
