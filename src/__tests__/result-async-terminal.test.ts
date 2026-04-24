@@ -1,6 +1,26 @@
 import { describe, it, expect } from 'vitest'
 import { okAsync, errAsync } from '../result-async.js'
 
+describe('ResultAsync.unwrap()', () => {
+  it('returns the value for Ok', async () => {
+    expect(await okAsync(5).unwrap()).toBe(5)
+  })
+
+  it('throws for Err with cause', async () => {
+    await expect(errAsync('bad').unwrap()).rejects.toThrow('Called unwrap on an Err value: bad')
+  })
+})
+
+describe('ResultAsync.unwrapErr()', () => {
+  it('returns the error for Err', async () => {
+    expect(await errAsync('bad').unwrapErr()).toBe('bad')
+  })
+
+  it('throws for Ok with cause', async () => {
+    await expect(okAsync(5).unwrapErr()).rejects.toThrow('Called unwrapErr on an Ok value')
+  })
+})
+
 describe('ResultAsync.match()', () => {
   it('calls okFn for Ok', async () => {
     const result = await okAsync(5).match(
