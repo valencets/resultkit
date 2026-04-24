@@ -34,9 +34,13 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
         if (result.isErr()) {
           return err<U, E>(result.error)
         }
-        const mapped = fn(result.value)
-        const resolved = mapped instanceof Promise ? await mapped : mapped
-        return ok<U, E>(resolved)
+        try {
+          const mapped = fn(result.value)
+          const resolved = mapped instanceof Promise ? await mapped : mapped
+          return ok<U, E>(resolved)
+        } catch (e) {
+          return err<U, E>(e as E)
+        }
       })
     )
   }
@@ -47,9 +51,13 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
         if (result.isOk()) {
           return ok<T, F>(result.value)
         }
-        const mapped = fn(result.error)
-        const resolved = mapped instanceof Promise ? await mapped : mapped
-        return err<T, F>(resolved)
+        try {
+          const mapped = fn(result.error)
+          const resolved = mapped instanceof Promise ? await mapped : mapped
+          return err<T, F>(resolved)
+        } catch (e) {
+          return err<T, F>(e as F)
+        }
       })
     )
   }
@@ -62,11 +70,15 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
         if (result.isErr()) {
           return err<U, E | F>(result.error)
         }
-        const next = fn(result.value)
-        if (next instanceof ResultAsync) {
-          return next._promise
+        try {
+          const next = fn(result.value)
+          if (next instanceof ResultAsync) {
+            return next._promise
+          }
+          return next as Result<U, E | F>
+        } catch (e) {
+          return err<U, E | F>(e as E | F)
         }
-        return next as Result<U, E | F>
       })
     )
   }
@@ -79,11 +91,15 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
         if (result.isOk()) {
           return ok<T | U, F>(result.value)
         }
-        const next = fn(result.error)
-        if (next instanceof ResultAsync) {
-          return next._promise
+        try {
+          const next = fn(result.error)
+          if (next instanceof ResultAsync) {
+            return next._promise
+          }
+          return next as Result<T | U, F>
+        } catch (e) {
+          return err<T | U, F>(e as F)
         }
-        return next as Result<T | U, F>
       })
     )
   }
