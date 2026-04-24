@@ -55,6 +55,16 @@ describe('match()', () => {
     })
   })
 
+  describe('missing handler safety', () => {
+    it('throws a descriptive error when no handler matches and no wildcard exists', () => {
+      expect(() => match('UNKNOWN' as ErrorCode, {
+        NOT_FOUND: () => 404,
+        INVALID: () => 400,
+        TIMEOUT: () => 408
+      })).toThrow('No match handler for "UNKNOWN"')
+    })
+  })
+
   describe('wildcard matching', () => {
     it('falls through to _ when no specific handler matches', () => {
       const result = match(ec('TIMEOUT'), {
@@ -115,6 +125,17 @@ describe('matchOn()', () => {
         })
       )
       expect(results).toEqual([404, 400, 408])
+    })
+  })
+
+  describe('missing handler safety', () => {
+    it('throws a descriptive error when no handler matches and no wildcard exists', () => {
+      const obj = { code: 'UNKNOWN', extra: true } as unknown as AppError
+      expect(() => matchOn(obj, 'code', {
+        NOT_FOUND: () => 'nf',
+        INVALID: () => 'inv',
+        TIMEOUT: () => 'to'
+      })).toThrow('No matchOn handler for "UNKNOWN"')
     })
   })
 
