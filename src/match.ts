@@ -18,7 +18,8 @@ export function match<
 export function match (value: string, handlers: Record<string, unknown>): unknown {
   const h = handlers as Record<string, ((v: string) => unknown) | undefined>
   const fn = h[value] ?? h['_']
-  return fn!(value)
+  if (!fn) throw new Error(`No match handler for "${value}"`)
+  return fn(value)
 }
 
 // ── matchOn() ─────────────────────────────────────────────────────────────────
@@ -45,5 +46,6 @@ export function matchOn (obj: Record<string, unknown>, discriminant: string, han
   const key = obj[discriminant] as string
   const h = handlers as Record<string, ((v: Record<string, unknown>) => unknown) | undefined>
   const fn = h[key] ?? h['_']
-  return fn!(obj)
+  if (!fn) throw new Error(`No matchOn handler for "${key}"`)
+  return fn(obj)
 }
