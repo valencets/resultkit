@@ -7,7 +7,6 @@
 <title>resultkit — Type-safe errors for TypeScript</title>
 <meta name="description" content="Strict typed errors, pattern matching, and an eslint preset that makes railway-oriented programming enforceable.">
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
 <script>
 tailwind.config = {
@@ -123,33 +122,17 @@ html { scroll-behavior: smooth; scroll-padding-top: 56px; }
     <p class="font-mono text-[10px] text-outline mt-1">@valencets/resultkit</p>
   </div>
   <nav class="flex-1 overflow-y-auto py-2 font-mono text-[11px] uppercase flex flex-col" id="sidebar-nav">
-    <a href="#hero" class="side-link active">
-      <span class="material-symbols-outlined text-[14px]">home</span> Overview
-    </a>
-    <a href="#pillars" class="side-link">
-      <span class="material-symbols-outlined text-[14px]">shield</span> Why resultkit
-    </a>
-    <a href="#examples" class="side-link">
-      <span class="material-symbols-outlined text-[14px]">code</span> Examples
-    </a>
-    <a href="#matching" class="side-link">
-      <span class="material-symbols-outlined text-[14px]">account_tree</span> Pattern matching
-    </a>
-    <a href="#async" class="side-link">
-      <span class="material-symbols-outlined text-[14px]">sync</span> Async &amp; combinators
-    </a>
-    <a href="#comparison" class="side-link">
-      <span class="material-symbols-outlined text-[14px]">compare_arrows</span> vs neverthrow
-    </a>
-    <a href="#eslint" class="side-link">
-      <span class="material-symbols-outlined text-[14px]">gavel</span> ESLint preset
-    </a>
-    <a href="#api" class="side-link">
-      <span class="material-symbols-outlined text-[14px]">menu_book</span> API reference
-    </a>
+    <a href="#hero" class="side-link active">Overview</a>
+    <a href="#pillars" class="side-link">Why resultkit</a>
+    <a href="#examples" class="side-link">Examples</a>
+    <a href="#matching" class="side-link">Pattern matching</a>
+    <a href="#async" class="side-link">Async &amp; combinators</a>
+    <a href="#comparison" class="side-link">vs neverthrow</a>
+    <a href="#eslint" class="side-link">ESLint preset</a>
+    <a href="#api" class="side-link">API reference</a>
   </nav>
   <div class="px-4 py-3 border-t border-[#30363D]">
-    <div class="font-mono text-[10px] text-secondary uppercase tracking-wider">195 tests passing</div>
+    <div class="font-mono text-[10px] text-secondary uppercase tracking-wider">198 tests · 99% coverage</div>
     <div class="font-mono text-[10px] text-outline mt-1">v0.3.0 · 0 deps · MIT</div>
   </div>
 </aside>
@@ -272,7 +255,7 @@ result.<span class="fn">match</span>({
         <div class="text-secondary bg-[#1a3820] px-3 py-1.5 border-l-2 border-secondary">+ ResultError&lt;Code&gt; + toJSON / fromJSON</div>
       </div>
       <div class="text-outline text-[10px] uppercase tracking-wider mt-auto pt-3 border-t border-outline-variant">
-        Zero dependencies · ESM only · Node ≥ 22
+        Zero dependencies · ESM only · Node ≥ 22 (Valence stack alignment — compiles to ES2022, no node: imports)
       </div>
     </div>
   </section>
@@ -465,9 +448,10 @@ result.<span class="fn">match</span>({
 <!-- Footer -->
 <footer class="fixed bottom-0 w-full z-50 flex items-center justify-between px-2 bg-primary-container text-surface-dim h-6 border-t border-outline-variant divide-x divide-surface-dim/20 font-mono text-[10px] font-bold uppercase">
   <div class="px-2 flex items-center h-full hover:bg-white transition-colors">v0.3.0</div>
-  <div class="px-2 flex items-center h-full hover:bg-white transition-colors">195 Tests</div>
+  <div class="px-2 flex items-center h-full hover:bg-white transition-colors">198 Tests</div>
   <div class="px-2 flex items-center h-full hover:bg-white transition-colors">0 lint errors</div>
   <div class="px-2 flex items-center h-full hover:bg-white transition-colors">0 type errors</div>
+  <div class="px-2 flex items-center h-full hover:bg-white transition-colors">99% coverage</div>
   <div class="px-2 flex items-center h-full hover:bg-white transition-colors">Zero deps</div>
   <div class="px-2 flex items-center h-full hover:bg-white transition-colors ml-auto">MIT · @valencets/resultkit</div>
 </footer>

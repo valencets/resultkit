@@ -217,6 +217,8 @@ export default [
 - TypeScript >= 5.9
 - ESM only (`"type": "module"`)
 
+The Node 22 floor tracks Valence's internal stack, not a technical constraint — the source compiles to ES2022 with no `node:` imports. Projects on Node 20 LTS can use resultkit by overriding the `engines` field; nothing at runtime requires Node 22 specifically.
+
 ## License
 
 MIT

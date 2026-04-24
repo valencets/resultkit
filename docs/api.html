@@ -488,7 +488,7 @@ result.<span class="fn">match</span>({
 
 <div id="combineAsync" class="entry">
   <div class="sig">combineAsync<span class="punc">(</span><span class="param">results</span>: readonly [...ResultAsyncs]<span class="punc">)</span>: ResultAsync<span class="punc">&lt;</span>[T1, ...], E1 | ...<span class="punc">&gt;</span></div>
-  <div class="desc">Async variant of <code>combine</code>. Awaits all ResultAsyncs in parallel, then merges the results. Same first-error-wins behavior and tuple type inference.</div>
+  <div class="desc">Async variant of <code>combine</code>. Uses <code>Promise.all</code> internally — all ResultAsyncs run concurrently and ordering matches the input array. Same first-error-wins behavior and tuple type inference. Note: all promises are awaited even if an early one is Err (Promise.all semantics), but only the first Err is returned.</div>
 <pre><code><span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">combineAsync</span>([
   <span class="fn">fetchUser</span>(<span class="num">1</span>),
   <span class="fn">fetchConfig</span>()
@@ -594,7 +594,7 @@ e.context  <span class="cm">// { userId: 123 }</span></code></pre>
 
 <div id="eslint" class="entry">
   <div class="sig">import resultkit from <span class="str">'@valencets/resultkit/eslint'</span></div>
-  <div class="desc">resultkit ships two eslint flat-config presets: <code>strict</code> (errors) and <code>recommended</code> (warnings). Both enforce the same rules — the difference is severity.</div>
+  <div class="desc">resultkit ships three eslint flat-config presets. <code>strict</code> (errors) and <code>recommended</code> (warnings) enforce the core error-handling rules. <code>opinionated</code> adds <code>strict</code> plus stylistic rules like banning <code>export default</code>.</div>
 
 <pre><code><span class="cm">// eslint.config.js</span>
 <span class="kw">import</span> resultkit <span class="kw">from</span> <span class="str">'@valencets/resultkit/eslint'</span>
@@ -612,7 +612,7 @@ e.context  <span class="cm">// { userId: 123 }</span></code></pre>
     <li><code>.catch()</code> calls → use <code>ResultAsync.fromPromise()</code></li>
     <li><code>.finally()</code> calls → use <code>.tap()</code> for cleanup</li>
     <li><code>enum</code> declarations → use const unions with <code>match()</code></li>
-    <li><code>export default</code> → use named exports</li>
+    <li><code>.unwrap()</code> / <code>.unwrapErr()</code> → use <code>.match()</code> or <code>.unwrapOr()</code> (override in test files)</li>
   </ul>
 </div>
 
