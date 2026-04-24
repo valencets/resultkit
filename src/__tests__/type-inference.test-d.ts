@@ -95,11 +95,12 @@ describe('fromThrowable type inference', () => {
     expectTypeOf(safeFn).toEqualTypeOf<(a: number, b: string) => Result<string, 'error'>>()
   })
 
-  it('infers unknown error type without errorFn', () => {
+  it('requires errorFn and infers the error type from it', () => {
     const safeFn = fromThrowable(
-      (s: string) => JSON.parse(s) as number
+      (s: string) => JSON.parse(s) as number,
+      () => 'parse_error' as const
     )
-    expectTypeOf(safeFn).toEqualTypeOf<(s: string) => Result<number, unknown>>()
+    expectTypeOf(safeFn).toEqualTypeOf<(s: string) => Result<number, 'parse_error'>>()
   })
 })
 
