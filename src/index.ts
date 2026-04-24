@@ -9,6 +9,8 @@ export type { InferOkType, InferErrType } from './types.js'
 export { match, matchOn } from './match.js'
 export { flatten } from './flatten.js'
 export { partition } from './partition.js'
+export { resultToJSON, resultFromJSON } from './serialization.js'
+export type { ResultJSON } from './serialization.js'
 export { ResultError, isResultError } from './result-error.js'
 export type {
   MatchHandlers,
