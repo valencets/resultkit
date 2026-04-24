@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest'
+
+// @ts-expect-error — JS config file, no declaration
 import preset from '../../eslint-preset.js'
 
 describe('eslint-preset', () => {

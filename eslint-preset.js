@@ -26,6 +26,14 @@ export const strict = [
           selector: 'SwitchStatement',
           message: 'Use match() or matchOn() instead of switch'
         },
+        {
+          selector: 'CallExpression[callee.property.name="catch"]',
+          message: 'Use ResultAsync.fromPromise() instead of .catch()'
+        },
+        {
+          selector: 'CallExpression[callee.property.name="finally"]',
+          message: 'Use .tap() for cleanup instead of .finally()'
+        },
         ...sharedRestrictions
       ]
     }
@@ -48,6 +56,14 @@ export const recommended = [
         {
           selector: 'SwitchStatement',
           message: 'Prefer match() or matchOn() over switch'
+        },
+        {
+          selector: 'CallExpression[callee.property.name="catch"]',
+          message: 'Prefer ResultAsync.fromPromise() over .catch()'
+        },
+        {
+          selector: 'CallExpression[callee.property.name="finally"]',
+          message: 'Prefer .tap() for cleanup over .finally()'
         },
         ...sharedRestrictions
       ]
