@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>resultkit — API Documentation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "outline-variant": "#414752",
+        "on-surface": "#e0e2ea",
+        "on-surface-variant": "#c0c7d4",
+        "error": "#ffb4ab",
+        "secondary": "#74dd7e",
+        "primary": "#a2c9ff",
+        "primary-container": "#58a6ff",
+        "surface-container": "#1c2025",
+        "background": "#101419",
+        "surface": "#101419",
+        "tertiary-container": "#bc8cff",
+        "surface-container-low": "#181c21",
+        "surface-container-highest": "#32353b",
+        "surface-variant": "#32353b",
+        "surface-dim": "#101419",
+        "surface-container-high": "#272a30",
+        "outline": "#8b919d",
+      },
+      fontFamily: {
+        "headline": ["JetBrains Mono"],
+        "label": ["JetBrains Mono"],
+        "body": ["Inter"],
+        "mono": ["JetBrains Mono"],
+      },
+    }
+  }
+}
+</script>
+<style>
+body {
+  background: #101419; color: #e0e2ea;
+  background-image:
+    linear-gradient(to right, #1c2025 1px, transparent 1px),
+    linear-gradient(to bottom, #1c2025 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+html { scroll-behavior: smooth; scroll-padding-top: 56px; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #101419; }
+::-webkit-scrollbar-thumb { background: #32353b; }
+.kw { color: #bc8cff; } .str { color: #74dd7e; } .fn { color: #58a6ff; }
+.cm { color: #8b919d; } .tp { color: #a2c9ff; } .num { color: #79c0ff; }
+.side-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px; color: #8b919d; font-size: 11px;
+  font-family: "JetBrains Mono"; text-transform: uppercase;
+  transition: none;
+}
+.side-link:hover, .side-link.active { color: #e0e2ea; background: #181c21; }
+.side-link.active { border-left: 2px solid #58a6ff; color: #58a6ff; padding-left: 10px; }
+.entry {
+  margin: 12px 16px;
+  padding: 24px 28px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+}
+.entry:first-of-type { margin-top: 16px; }
+.entry:last-of-type { margin-bottom: 16px; }
+.sig { font-family: "JetBrains Mono"; font-size: 14px; color: #58a6ff; margin-bottom: 12px; line-height: 1.5; }
+.sig .param { color: #a2c9ff; }
+.sig .punc { color: #8b919d; }
+.desc { font-size: 14px; color: #c0c7d4; line-height: 1.7; margin-bottom: 12px; }
+.desc code { font-family: "JetBrains Mono"; font-size: 12px; background: #1c2025; padding: 2px 5px; border-radius: 3px; }
+.desc strong { color: #e0e2ea; font-weight: 600; }
+.behavior { font-size: 13px; color: #8b919d; line-height: 1.6; }
+.behavior li { margin-bottom: 4px; }
+.behavior code { font-family: "JetBrains Mono"; font-size: 12px; }
+pre {
+  background: #0d1117; border: 1px solid #30363d; border-radius: 6px;
+  padding: 16px 20px; overflow-x: auto; font-family: "JetBrains Mono";
+  font-size: 13px; line-height: 1.7; margin-top: 12px;
+}
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col font-body overflow-x-hidden">
+
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 flex h-12 items-center px-4 bg-[#0D1117] border-b border-[#30363D]">
+  <a href="index.html" class="text-lg font-bold font-mono border-r border-[#30363D] pr-4 h-full flex items-center tracking-tight">
+    <span class="text-on-surface">result</span><span class="text-primary-container">kit</span>
+  </a>
+  <div class="flex h-full font-mono text-sm uppercase tracking-tighter ml-4">
+    <a class="text-[#8B949E] hover:text-primary-container h-full flex items-center px-4 hover:bg-[#161B22] transition-colors" href="index.html">Home</a>
+    <a class="text-primary-container border-b border-primary-container h-full flex items-center px-4 hover:bg-[#161B22] transition-colors" href="#">API Docs</a>
+    <a class="text-[#8B949E] hover:text-primary-container h-full flex items-center px-4 hover:bg-[#161B22] transition-colors" href="https://github.com/valencets/resultkit">GitHub</a>
+  </div>
+  <div class="ml-auto font-mono text-sm uppercase tracking-tighter">
+    <span class="text-primary-container border border-primary-container px-3 py-1 bg-[#0D1117] hover:bg-primary-container hover:text-black transition-colors cursor-pointer">npm i @valencets/resultkit</span>
+  </div>
+</nav>
+
+<!-- Sidebar -->
+<aside class="fixed left-0 top-12 h-[calc(100vh-48px)] w-56 z-40 flex-col bg-[#0D1117] border-r border-[#30363D] hidden md:flex">
+  <div class="px-4 py-3 border-b border-[#30363D]">
+    <h2 class="font-mono text-[10px] uppercase text-primary-container font-bold tracking-widest">API Docs</h2>
+  </div>
+  <nav class="flex-1 overflow-y-auto py-2 flex flex-col" id="sidebar-nav">
+    <div class="px-4 pt-3 pb-1 font-mono text-[9px] uppercase tracking-widest text-outline">Constructors</div>
+    <a href="#ok" class="side-link active">ok()</a>
+    <a href="#err" class="side-link">err()</a>
+    <a href="#okAsync" class="side-link">okAsync()</a>
+    <a href="#errAsync" class="side-link">errAsync()</a>
+    <a href="#fromThrowable" class="side-link">fromThrowable()</a>
+    <a href="#fromThrowableAsync" class="side-link">fromThrowableAsync()</a>
+    <a href="#fromNullable" class="side-link">fromNullable()</a>
+    <a href="#fromPromise" class="side-link">ResultAsync.fromPromise()</a>
+    <a href="#fromSafePromise" class="side-link">ResultAsync.fromSafePromise()</a>
+    <div class="px-4 pt-4 pb-1 font-mono text-[9px] uppercase tracking-widest text-outline">Methods</div>
+    <a href="#isOk" class="side-link">isOk() / isErr()</a>
+    <a href="#map" class="side-link">map()</a>
+    <a href="#mapErr" class="side-link">mapErr()</a>
+    <a href="#andThen" class="side-link">andThen()</a>
+    <a href="#orElse" class="side-link">orElse()</a>
+    <a href="#match-method" class="side-link">match()</a>
+    <a href="#tap" class="side-link">tap() / tapErr()</a>
+    <a href="#unwrapOr" class="side-link">unwrapOr()</a>
+    <a href="#unwrap" class="side-link">unwrap() / unwrapErr()</a>
+    <a href="#toAsync" class="side-link">toAsync()</a>
+    <div class="px-4 pt-4 pb-1 font-mono text-[9px] uppercase tracking-widest text-outline">Standalone</div>
+    <a href="#match-fn" class="side-link">match()</a>
+    <a href="#matchOn" class="side-link">matchOn()</a>
+    <a href="#combine" class="side-link">combine()</a>
+    <a href="#combineAsync" class="side-link">combineAsync()</a>
+    <a href="#partition" class="side-link">partition()</a>
+    <a href="#flatten" class="side-link">flatten()</a>
+    <div class="px-4 pt-4 pb-1 font-mono text-[9px] uppercase tracking-widest text-outline">Errors &amp; utilities</div>
+    <a href="#ResultError" class="side-link">ResultError</a>
+    <a href="#isResultError" class="side-link">isResultError()</a>
+    <a href="#resultToJSON" class="side-link">resultToJSON()</a>
+    <a href="#resultFromJSON" class="side-link">resultFromJSON()</a>
+    <a href="#InferOkType" class="side-link">InferOkType / InferErrType</a>
+    <div class="px-4 pt-4 pb-1 font-mono text-[9px] uppercase tracking-widest text-outline">ESLint</div>
+    <a href="#eslint" class="side-link">ESLint preset</a>
+  </nav>
+</aside>
+
+<!-- Main content -->
+<main class="flex-1 md:ml-56 mt-12">
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CONSTRUCTORS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="border-b border-[#30363D] px-7 py-5 bg-surface-container-high">
+  <h2 class="font-mono text-[13px] uppercase tracking-widest text-primary-container font-bold">Constructors</h2>
+</div>
+
+<div id="ok" class="entry">
+  <div class="sig">ok<span class="punc">&lt;</span><span class="param">T</span><span class="punc">&gt;(</span><span class="param">value</span>: T<span class="punc">)</span>: Ok<span class="punc">&lt;</span>T, never<span class="punc">&gt;</span></div>
+  <div class="desc">Creates a success Result containing <code>value</code>. The error type defaults to <code>never</code> since an Ok can't hold an error.</div>
+  <ul class="behavior">
+    <li>The returned object has a <code>.value</code> property holding your value.</li>
+    <li><code>.isOk()</code> returns <code>true</code>, <code>.isErr()</code> returns <code>false</code>.</li>
+    <li>Accepts any value including <code>null</code>, <code>undefined</code>, <code>0</code>, and <code>''</code>.</li>
+  </ul>
+<pre><code><span class="kw">const</span> result = <span class="fn">ok</span>(<span class="num">42</span>)        <span class="cm">// Ok&lt;number, never&gt;</span>
+<span class="kw">const</span> user = <span class="fn">ok</span>({ name: <span class="str">'alice'</span> })  <span class="cm">// Ok&lt;{ name: string }, never&gt;</span></code></pre>
+</div>
+
+<div id="err" class="entry">
+  <div class="sig">err<span class="punc">&lt;</span><span class="param">E</span><span class="punc">&gt;(</span><span class="param">error</span>: E<span class="punc">)</span>: Err<span class="punc">&lt;</span>never, E<span class="punc">&gt;</span></div>
+  <div class="desc">Creates a failure Result containing <code>error</code>. The success type defaults to <code>never</code> since an Err can't hold a value.</div>
+  <ul class="behavior">
+    <li>The returned object has an <code>.error</code> property holding your error.</li>
+    <li><code>.isOk()</code> returns <code>false</code>, <code>.isErr()</code> returns <code>true</code>.</li>
+    <li>The error can be any type — string, object, <code>ResultError</code>, etc.</li>
+  </ul>
+<pre><code><span class="kw">const</span> result = <span class="fn">err</span>(<span class="str">'not found'</span>)
+<span class="kw">const</span> typed = <span class="fn">err</span>(<span class="kw">new</span> <span class="tp">ResultError</span>(<span class="str">'TIMEOUT'</span>, <span class="str">'request timed out'</span>))</code></pre>
+</div>
+
+<div id="okAsync" class="entry">
+  <div class="sig">okAsync<span class="punc">&lt;</span><span class="param">T</span><span class="punc">&gt;(</span><span class="param">value</span>: T<span class="punc">)</span>: ResultAsync<span class="punc">&lt;</span>T, never<span class="punc">&gt;</span></div>
+  <div class="desc">Creates an async success. Equivalent to <code>ok(value).toAsync()</code> but more concise. Useful when a function returns <code>ResultAsync</code> and you need to return a known-good value.</div>
+<pre><code><span class="kw">const</span> result = <span class="fn">okAsync</span>(<span class="num">42</span>)
+<span class="kw">const</span> value = <span class="kw">await</span> result  <span class="cm">// Ok&lt;number, never&gt;</span></code></pre>
+</div>
+
+<div id="errAsync" class="entry">
+  <div class="sig">errAsync<span class="punc">&lt;</span><span class="param">E</span><span class="punc">&gt;(</span><span class="param">error</span>: E<span class="punc">)</span>: ResultAsync<span class="punc">&lt;</span>never, E<span class="punc">&gt;</span></div>
+  <div class="desc">Creates an async failure. Equivalent to <code>err(error).toAsync()</code>. Useful when a function returns <code>ResultAsync</code> and you need to return a known error.</div>
+<pre><code><span class="kw">const</span> result = <span class="fn">errAsync</span>({ code: <span class="str">'TIMEOUT'</span>, ms: <span class="num">5000</span> })</code></pre>
+</div>
+
+<div id="fromThrowable" class="entry">
+  <div class="sig">fromThrowable<span class="punc">&lt;</span><span class="param">A</span>, <span class="param">R</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">fn</span>: (...args: A) =&gt; R, <span class="param">errorFn</span>: (e: unknown) =&gt; E<span class="punc">)</span>: (...args: A) =&gt; Result<span class="punc">&lt;</span>R, E<span class="punc">&gt;</span></div>
+  <div class="desc">Wraps a function that might throw into one that returns a <code>Result</code>. The <code>errorFn</code> parameter is <strong>required</strong> — this is how resultkit enforces typed errors at every boundary. If <code>fn</code> succeeds, you get <code>Ok</code>. If it throws, the caught error is passed to <code>errorFn</code> and you get <code>Err</code>.</div>
+  <ul class="behavior">
+    <li>Returns a new function with the same arguments as <code>fn</code>, but returning <code>Result&lt;R, E&gt;</code> instead of <code>R</code>.</li>
+    <li><code>errorFn</code> receives <code>unknown</code> because JavaScript can throw anything. You decide how to type it.</li>
+    <li>This is the only place <code>try/catch</code> should exist in your codebase.</li>
+  </ul>
+<pre><code><span class="kw">const</span> safeParse = <span class="fn">fromThrowable</span>(
+  (s: <span class="tp">string</span>) =&gt; <span class="tp">JSON</span>.<span class="fn">parse</span>(s),
+  (e) =&gt; <span class="kw">new</span> <span class="tp">ResultError</span>(<span class="str">'PARSE'</span>, e <span class="kw">instanceof</span> <span class="tp">Error</span> ? e.message : <span class="str">'unknown'</span>)
+)
+
+<span class="kw">const</span> result = <span class="fn">safeParse</span>(<span class="str">'{"valid": true}'</span>)  <span class="cm">// Ok</span>
+<span class="kw">const</span> bad = <span class="fn">safeParse</span>(<span class="str">'nope'</span>)               <span class="cm">// Err</span></code></pre>
+</div>
+
+<div id="fromThrowableAsync" class="entry">
+  <div class="sig">fromThrowableAsync<span class="punc">&lt;</span><span class="param">A</span>, <span class="param">R</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">fn</span>: (...args: A) =&gt; Promise&lt;R&gt;, <span class="param">errorFn</span>: (e: unknown) =&gt; E<span class="punc">)</span>: (...args: A) =&gt; ResultAsync<span class="punc">&lt;</span>R, E<span class="punc">&gt;</span></div>
+  <div class="desc">Same as <code>fromThrowable</code> but for async functions. Wraps a function that returns a Promise into one that returns <code>ResultAsync</code>. Catches both synchronous throws and promise rejections.</div>
+<pre><code><span class="kw">const</span> safeFetch = <span class="fn">fromThrowableAsync</span>(
+  <span class="kw">async</span> (url: <span class="tp">string</span>) =&gt; {
+    <span class="kw">const</span> r = <span class="kw">await</span> <span class="fn">fetch</span>(url)
+    <span class="kw">return</span> r.<span class="fn">json</span>()
+  },
+  (e) =&gt; <span class="kw">new</span> <span class="tp">ResultError</span>(<span class="str">'FETCH'</span>, <span class="tp">String</span>(e))
+)
+
+<span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">safeFetch</span>(<span class="str">'/api/users'</span>)</code></pre>
+</div>
+
+<div id="fromNullable" class="entry">
+  <div class="sig">fromNullable<span class="punc">&lt;</span><span class="param">T</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">value</span>: T | null | undefined, <span class="param">error</span>: E<span class="punc">)</span>: Result<span class="punc">&lt;</span>T, E<span class="punc">&gt;</span></div>
+  <div class="desc">Converts a nullable value into a Result. If <code>value</code> is <code>null</code> or <code>undefined</code>, returns <code>Err(error)</code>. Otherwise returns <code>Ok(value)</code>.</div>
+  <ul class="behavior">
+    <li>Uses strict equality — <code>0</code>, <code>''</code>, and <code>false</code> are treated as valid values and return <code>Ok</code>.</li>
+    <li>Only <code>null</code> and <code>undefined</code> produce <code>Err</code>.</li>
+  </ul>
+<pre><code><span class="fn">fromNullable</span>(user.email, <span class="str">'no email'</span>)   <span class="cm">// Ok('alice@...') or Err('no email')</span>
+<span class="fn">fromNullable</span>(<span class="num">0</span>, <span class="str">'missing'</span>)              <span class="cm">// Ok(0) — not Err</span>
+<span class="fn">fromNullable</span>(<span class="kw">null</span>, <span class="str">'missing'</span>)           <span class="cm">// Err('missing')</span></code></pre>
+</div>
+
+<div id="fromPromise" class="entry">
+  <div class="sig">ResultAsync.fromPromise<span class="punc">&lt;</span><span class="param">T</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">promise</span>: PromiseLike&lt;T&gt;, <span class="param">errorFn</span>: (e: unknown) =&gt; E<span class="punc">)</span>: ResultAsync<span class="punc">&lt;</span>T, E<span class="punc">&gt;</span></div>
+  <div class="desc">Wraps a promise that might reject into a <code>ResultAsync</code>. If the promise resolves, you get <code>Ok</code>. If it rejects, the rejection value is passed to <code>errorFn</code> and you get <code>Err</code>.</div>
+  <ul class="behavior">
+    <li>This is the primary way to convert promise-based APIs into the Result pattern.</li>
+    <li><code>errorFn</code> is required — same philosophy as <code>fromThrowable</code>.</li>
+  </ul>
+<pre><code><span class="kw">const</span> result = <span class="tp">ResultAsync</span>.<span class="fn">fromPromise</span>(
+  <span class="fn">fetch</span>(<span class="str">'/api/data'</span>).<span class="fn">then</span>(r =&gt; r.<span class="fn">json</span>()),
+  (e) =&gt; ({ code: <span class="str">'NETWORK'</span>, message: <span class="tp">String</span>(e) })
+)</code></pre>
+</div>
+
+<div id="fromSafePromise" class="entry">
+  <div class="sig">ResultAsync.fromSafePromise<span class="punc">&lt;</span><span class="param">T</span><span class="punc">&gt;(</span><span class="param">promise</span>: PromiseLike&lt;T&gt;<span class="punc">)</span>: ResultAsync<span class="punc">&lt;</span>T, never<span class="punc">&gt;</span></div>
+  <div class="desc">Wraps a promise that you guarantee will never reject. No <code>errorFn</code> needed because there's no rejection to handle. If the promise does reject, the rejection propagates as an unhandled rejection.</div>
+  <ul class="behavior">
+    <li>Use only when you are certain the promise cannot reject.</li>
+    <li>If unsure, use <code>ResultAsync.fromPromise</code> instead.</li>
+  </ul>
+<pre><code><span class="kw">const</span> config = <span class="tp">ResultAsync</span>.<span class="fn">fromSafePromise</span>(
+  <span class="fn">readFile</span>(<span class="str">'./config.json'</span>, <span class="str">'utf-8'</span>)
+)</code></pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- METHODS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="border-b border-[#30363D] px-7 py-5 bg-surface-container-high">
+  <h2 class="font-mono text-[13px] uppercase tracking-widest text-tertiary-container font-bold">Instance methods</h2>
+  <p class="text-[12px] text-outline mt-1">Available on Ok, Err, and ResultAsync unless noted.</p>
+</div>
+
+<div id="isOk" class="entry">
+  <div class="sig">.isOk<span class="punc">()</span>: boolean &nbsp;&nbsp;/&nbsp;&nbsp; .isErr<span class="punc">()</span>: boolean</div>
+  <div class="desc">Type-narrowing guards. After calling <code>.isOk()</code> in an <code>if</code> block, TypeScript knows you have an <code>Ok</code> and can access <code>.value</code>. After <code>.isErr()</code>, you can access <code>.error</code>.</div>
+<pre><code><span class="kw">const</span> result: <span class="tp">Result</span>&lt;<span class="tp">number</span>, <span class="tp">string</span>&gt; = <span class="fn">divide</span>(<span class="num">10</span>, <span class="num">2</span>)
+
+<span class="kw">if</span> (result.<span class="fn">isOk</span>()) {
+  <span class="tp">console</span>.<span class="fn">log</span>(result.value)   <span class="cm">// TypeScript knows this is number</span>
+}
+<span class="kw">if</span> (result.<span class="fn">isErr</span>()) {
+  <span class="tp">console</span>.<span class="fn">log</span>(result.error)   <span class="cm">// TypeScript knows this is string</span>
+}</code></pre>
+</div>
+
+<div id="map" class="entry">
+  <div class="sig">.map<span class="punc">&lt;</span><span class="param">U</span><span class="punc">&gt;(</span><span class="param">fn</span>: (value: T) =&gt; U<span class="punc">)</span>: Result<span class="punc">&lt;</span>U, E<span class="punc">&gt;</span></div>
+  <div class="desc">Transforms the success value using <code>fn</code>. If the Result is an <code>Err</code>, the function is not called and the <code>Err</code> passes through unchanged.</div>
+  <ul class="behavior">
+    <li>On <code>Ok</code>: calls <code>fn(value)</code> and wraps the return in a new <code>Ok</code>.</li>
+    <li>On <code>Err</code>: returns the same <code>Err</code> instance (no allocation).</li>
+    <li>On <code>ResultAsync</code>: <code>fn</code> can return <code>U</code> or <code>Promise&lt;U&gt;</code>. If <code>fn</code> throws, the error is caught and returned as <code>Err</code>.</li>
+  </ul>
+<pre><code><span class="fn">ok</span>(<span class="num">5</span>).<span class="fn">map</span>(n =&gt; n * <span class="num">2</span>)           <span class="cm">// Ok(10)</span>
+<span class="fn">err</span>(<span class="str">'bad'</span>).<span class="fn">map</span>(n =&gt; n * <span class="num">2</span>)       <span class="cm">// Err('bad') — fn not called</span>
+<span class="fn">ok</span>(<span class="str">'hello'</span>).<span class="fn">map</span>(s =&gt; s.length)  <span class="cm">// Ok(5)</span></code></pre>
+</div>
+
+<div id="mapErr" class="entry">
+  <div class="sig">.mapErr<span class="punc">&lt;</span><span class="param">F</span><span class="punc">&gt;(</span><span class="param">fn</span>: (error: E) =&gt; F<span class="punc">)</span>: Result<span class="punc">&lt;</span>T, F<span class="punc">&gt;</span></div>
+  <div class="desc">Transforms the error value using <code>fn</code>. If the Result is an <code>Ok</code>, the function is not called and the <code>Ok</code> passes through unchanged.</div>
+  <ul class="behavior">
+    <li>On <code>Err</code>: calls <code>fn(error)</code> and wraps the return in a new <code>Err</code>.</li>
+    <li>On <code>Ok</code>: returns the same <code>Ok</code> instance (no allocation).</li>
+  </ul>
+<pre><code><span class="fn">err</span>(<span class="str">'bad'</span>).<span class="fn">mapErr</span>(e =&gt; e.<span class="fn">toUpperCase</span>())  <span class="cm">// Err('BAD')</span>
+<span class="fn">ok</span>(<span class="num">5</span>).<span class="fn">mapErr</span>(e =&gt; e.<span class="fn">toUpperCase</span>())      <span class="cm">// Ok(5) — fn not called</span></code></pre>
+</div>
+
+<div id="andThen" class="entry">
+  <div class="sig">.andThen<span class="punc">&lt;</span><span class="param">U</span>, <span class="param">F</span><span class="punc">&gt;(</span><span class="param">fn</span>: (value: T) =&gt; Result&lt;U, F&gt;<span class="punc">)</span>: Result<span class="punc">&lt;</span>U, E | F<span class="punc">&gt;</span></div>
+  <div class="desc">Chains into another Result-returning function. This is flatMap — use it when the transformation itself can fail. The error type becomes <code>E | F</code> because either the original error or the new error could occur.</div>
+  <ul class="behavior">
+    <li>On <code>Ok</code>: calls <code>fn(value)</code> which must return a <code>Result</code>.</li>
+    <li>On <code>Err</code>: returns the same <code>Err</code> (short-circuits).</li>
+    <li>On <code>ResultAsync</code>: <code>fn</code> can return <code>Result</code> or <code>ResultAsync</code>.</li>
+  </ul>
+<pre><code><span class="kw">function</span> <span class="fn">divide</span>(a: <span class="tp">number</span>, b: <span class="tp">number</span>): <span class="tp">Result</span>&lt;<span class="tp">number</span>, <span class="str">'DIV_ZERO'</span>&gt; {
+  <span class="kw">return</span> b === <span class="num">0</span> ? <span class="fn">err</span>(<span class="str">'DIV_ZERO'</span>) : <span class="fn">ok</span>(a / b)
+}
+
+<span class="fn">ok</span>(<span class="num">10</span>).<span class="fn">andThen</span>(n =&gt; <span class="fn">divide</span>(n, <span class="num">2</span>))   <span class="cm">// Ok(5)</span>
+<span class="fn">ok</span>(<span class="num">10</span>).<span class="fn">andThen</span>(n =&gt; <span class="fn">divide</span>(n, <span class="num">0</span>))   <span class="cm">// Err('DIV_ZERO')</span>
+<span class="fn">err</span>(<span class="str">'bad'</span>).<span class="fn">andThen</span>(n =&gt; <span class="fn">ok</span>(n))     <span class="cm">// Err('bad') — fn not called</span></code></pre>
+</div>
+
+<div id="orElse" class="entry">
+  <div class="sig">.orElse<span class="punc">&lt;</span><span class="param">U</span>, <span class="param">F</span><span class="punc">&gt;(</span><span class="param">fn</span>: (error: E) =&gt; Result&lt;U, F&gt;<span class="punc">)</span>: Result<span class="punc">&lt;</span>T | U, F<span class="punc">&gt;</span></div>
+  <div class="desc">Attempts to recover from an error. The inverse of <code>.andThen()</code>. If the Result is <code>Err</code>, calls <code>fn</code> with the error to produce a new Result. If <code>Ok</code>, passes through unchanged.</div>
+<pre><code><span class="fn">err</span>(<span class="str">'bad'</span>).<span class="fn">orElse</span>(() =&gt; <span class="fn">ok</span>(<span class="num">0</span>))    <span class="cm">// Ok(0) — recovered</span>
+<span class="fn">ok</span>(<span class="num">5</span>).<span class="fn">orElse</span>(() =&gt; <span class="fn">ok</span>(<span class="num">0</span>))         <span class="cm">// Ok(5) — fn not called</span>
+<span class="fn">err</span>(<span class="str">'bad'</span>).<span class="fn">orElse</span>(() =&gt; <span class="fn">err</span>(<span class="str">'worse'</span>))  <span class="cm">// Err('worse')</span></code></pre>
+</div>
+
+<div id="match-method" class="entry">
+  <div class="sig">.match<span class="punc">&lt;</span><span class="param">A</span>, <span class="param">B</span><span class="punc">&gt;(</span><span class="param">okFn</span>, <span class="param">errFn</span><span class="punc">)</span>: A | B &nbsp;&nbsp;or&nbsp;&nbsp; .match<span class="punc">({</span> ok, err <span class="punc">})</span>: A | B</div>
+  <div class="desc">Exhaustively handles both paths and returns a value. Two calling styles: positional arguments or an object with <code>ok</code> and <code>err</code> keys. Both are equivalent.</div>
+  <ul class="behavior">
+    <li>On <code>Ok</code>: calls the ok handler with the value.</li>
+    <li>On <code>Err</code>: calls the err handler with the error.</li>
+    <li>On <code>ResultAsync</code>: returns <code>Promise&lt;A | B&gt;</code>.</li>
+    <li>You must handle both paths — this is how you "exit" the Result chain.</li>
+  </ul>
+<pre><code><span class="cm">// Positional style</span>
+result.<span class="fn">match</span>(
+  value =&gt; <span class="str">`got ${value}`</span>,
+  error =&gt; <span class="str">`failed: ${error}`</span>
+)
+
+<span class="cm">// Object style — more readable in complex cases</span>
+result.<span class="fn">match</span>({
+  <span class="fn">ok</span>:  value =&gt; <span class="fn">renderSuccess</span>(value),
+  <span class="fn">err</span>: error =&gt; <span class="fn">renderError</span>(error)
+})</code></pre>
+</div>
+
+<div id="tap" class="entry">
+  <div class="sig">.tap<span class="punc">(</span><span class="param">fn</span>: (value: T) =&gt; void<span class="punc">)</span>: this &nbsp;&nbsp;/&nbsp;&nbsp; .tapErr<span class="punc">(</span><span class="param">fn</span>: (error: E) =&gt; void<span class="punc">)</span>: this</div>
+  <div class="desc">Inspect the value or error without transforming it. The function's return value is ignored and the original Result is returned unchanged. Use for logging, metrics, or other side effects mid-chain.</div>
+  <ul class="behavior">
+    <li><code>.tap(fn)</code>: calls <code>fn</code> only on <code>Ok</code>. Returns the same Result.</li>
+    <li><code>.tapErr(fn)</code>: calls <code>fn</code> only on <code>Err</code>. Returns the same Result.</li>
+    <li>On sync Results, returns the exact same object reference (zero allocation).</li>
+  </ul>
+<pre><code><span class="fn">ok</span>(<span class="num">5</span>)
+  .<span class="fn">tap</span>(v =&gt; <span class="tp">console</span>.<span class="fn">log</span>(<span class="str">'value:'</span>, v))     <span class="cm">// logs "value: 5"</span>
+  .<span class="fn">map</span>(v =&gt; v * <span class="num">2</span>)                          <span class="cm">// Ok(10)</span>
+
+<span class="fn">err</span>(<span class="str">'bad'</span>)
+  .<span class="fn">tapErr</span>(e =&gt; <span class="tp">console</span>.<span class="fn">error</span>(<span class="str">'error:'</span>, e))  <span class="cm">// logs "error: bad"</span>
+  .<span class="fn">orElse</span>(() =&gt; <span class="fn">ok</span>(<span class="num">0</span>))                      <span class="cm">// Ok(0)</span></code></pre>
+</div>
+
+<div id="unwrapOr" class="entry">
+  <div class="sig">.unwrapOr<span class="punc">&lt;</span><span class="param">A</span><span class="punc">&gt;(</span><span class="param">defaultValue</span>: A<span class="punc">)</span>: T | A</div>
+  <div class="desc">Extracts the success value, or returns <code>defaultValue</code> if the Result is an <code>Err</code>. This is a safe way to exit a Result chain when you have a sensible default.</div>
+<pre><code><span class="fn">ok</span>(<span class="num">5</span>).<span class="fn">unwrapOr</span>(<span class="num">0</span>)           <span class="cm">// 5</span>
+<span class="fn">err</span>(<span class="str">'bad'</span>).<span class="fn">unwrapOr</span>(<span class="num">0</span>)      <span class="cm">// 0</span></code></pre>
+</div>
+
+<div id="unwrap" class="entry">
+  <div class="sig">.unwrap<span class="punc">()</span>: T &nbsp;&nbsp;/&nbsp;&nbsp; .unwrapErr<span class="punc">()</span>: E</div>
+  <div class="desc"><strong>Unsafe extraction.</strong> <code>.unwrap()</code> returns the value if <code>Ok</code>, or throws if <code>Err</code>. <code>.unwrapErr()</code> returns the error if <code>Err</code>, or throws if <code>Ok</code>. Both include the original value/error as <code>Error.cause</code> for debugging. <code>.unwrap()</code> additionally appends string errors to the message.</div>
+  <ul class="behavior">
+    <li>Primarily intended for tests where you've already asserted the Result state.</li>
+    <li>The eslint preset will flag these in production code.</li>
+    <li>On <code>ResultAsync</code>: returns <code>Promise&lt;T&gt;</code> / <code>Promise&lt;E&gt;</code> and rejects on the wrong variant.</li>
+  </ul>
+<pre><code><span class="fn">ok</span>(<span class="num">5</span>).<span class="fn">unwrap</span>()         <span class="cm">// 5</span>
+<span class="fn">err</span>(<span class="str">'bad'</span>).<span class="fn">unwrap</span>()    <span class="cm">// throws Error('Called unwrap on an Err value: bad')</span>
+                        <span class="cm">//   cause: 'bad'</span>
+
+<span class="fn">err</span>(<span class="str">'bad'</span>).<span class="fn">unwrapErr</span>()  <span class="cm">// 'bad'</span>
+<span class="fn">ok</span>(<span class="num">5</span>).<span class="fn">unwrapErr</span>()      <span class="cm">// throws Error('Called unwrapErr on an Ok value')</span>
+                        <span class="cm">//   cause: 5</span></code></pre>
+</div>
+
+<div id="toAsync" class="entry">
+  <div class="sig">.toAsync<span class="punc">()</span>: ResultAsync<span class="punc">&lt;</span>T, E<span class="punc">&gt;</span></div>
+  <div class="desc">Converts a sync <code>Result</code> into a <code>ResultAsync</code>. Use when you need to chain a sync Result into an async pipeline.</div>
+<pre><code><span class="kw">const</span> sync = <span class="fn">ok</span>(<span class="num">5</span>)
+<span class="kw">const</span> async = sync.<span class="fn">toAsync</span>()  <span class="cm">// ResultAsync&lt;number, never&gt;</span>
+
+<span class="cm">// Now you can chain with async operations</span>
+<span class="kw">const</span> result = <span class="kw">await</span> sync.<span class="fn">toAsync</span>()
+  .<span class="fn">andThen</span>(n =&gt; <span class="fn">fetchUser</span>(n))</code></pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- STANDALONE FUNCTIONS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="border-b border-[#30363D] px-7 py-5 bg-surface-container-high">
+  <h2 class="font-mono text-[13px] uppercase tracking-widest text-secondary font-bold">Standalone functions</h2>
+</div>
+
+<div id="match-fn" class="entry">
+  <div class="sig">match<span class="punc">&lt;</span><span class="param">V</span> extends string<span class="punc">&gt;(</span><span class="param">value</span>: V, <span class="param">handlers</span>: { [K in V]: (value: K) =&gt; R }<span class="punc">)</span>: R</div>
+  <div class="desc">Pattern match on a string union type. Pass a value and an object of handlers — one per variant. TypeScript enforces that every variant has a handler (exhaustive) unless you include a <code>_</code> wildcard.</div>
+  <ul class="behavior">
+    <li><strong>Exhaustive mode:</strong> provide a handler for every variant. Missing one is a compile error.</li>
+    <li><strong>Wildcard mode:</strong> include a <code>_</code> key to catch any unhandled variants.</li>
+    <li>Each handler receives the matched value as its argument.</li>
+    <li>Throws at runtime if a value has no matching handler and no wildcard.</li>
+  </ul>
+<pre><code><span class="kw">type</span> <span class="tp">Color</span> = <span class="str">'red'</span> | <span class="str">'green'</span> | <span class="str">'blue'</span>
+
+<span class="cm">// Exhaustive — all variants required</span>
+<span class="fn">match</span>(color, {
+  <span class="fn">red</span>:   () =&gt; <span class="str">'#ff0000'</span>,
+  <span class="fn">green</span>: () =&gt; <span class="str">'#00ff00'</span>,
+  <span class="fn">blue</span>:  () =&gt; <span class="str">'#0000ff'</span>
+})
+
+<span class="cm">// Wildcard — handle some, catch-all the rest</span>
+<span class="fn">match</span>(color, {
+  <span class="fn">red</span>: () =&gt; <span class="str">'danger'</span>,
+  <span class="fn">_</span>:   () =&gt; <span class="str">'safe'</span>
+})</code></pre>
+</div>
+
+<div id="matchOn" class="entry">
+  <div class="sig">matchOn<span class="punc">&lt;</span><span class="param">T</span>, <span class="param">K</span><span class="punc">&gt;(</span><span class="param">obj</span>: T, <span class="param">discriminant</span>: K, <span class="param">handlers</span>: { ... }<span class="punc">)</span>: R</div>
+  <div class="desc">Pattern match on a discriminated union using a key. Pass an object, the name of its discriminant property, and handlers for each variant. TypeScript narrows the type inside each handler so you get access to variant-specific properties.</div>
+  <ul class="behavior">
+    <li>Supports exhaustive and wildcard modes, same as <code>match()</code>.</li>
+    <li>Each handler receives the full object narrowed to the matching variant.</li>
+    <li>Works with <code>ResultError&lt;Code&gt;</code> — use <code>'code'</code> as the discriminant.</li>
+  </ul>
+<pre><code><span class="kw">type</span> <span class="tp">Shape</span> =
+  | { <span class="tp">kind</span>: <span class="str">'circle'</span>; <span class="tp">radius</span>: <span class="tp">number</span> }
+  | { <span class="tp">kind</span>: <span class="str">'rect'</span>;   <span class="tp">w</span>: <span class="tp">number</span>; <span class="tp">h</span>: <span class="tp">number</span> }
+
+<span class="fn">matchOn</span>(shape, <span class="str">'kind'</span>, {
+  <span class="fn">circle</span>: s =&gt; <span class="tp">Math</span>.PI * s.radius ** <span class="num">2</span>,  <span class="cm">// s: { kind, radius }</span>
+  <span class="fn">rect</span>:   s =&gt; s.w * s.h                  <span class="cm">// s: { kind, w, h }</span>
+})</code></pre>
+</div>
+
+<div id="combine" class="entry">
+  <div class="sig">combine<span class="punc">(</span><span class="param">results</span>: readonly [...Results]<span class="punc">)</span>: Result<span class="punc">&lt;</span>[T1, T2, ...], E1 | E2 | ...<span class="punc">&gt;</span></div>
+  <div class="desc">Merges an array of Results into a single Result containing a tuple of all success values. If any Result is <code>Err</code>, returns the first <code>Err</code> encountered. The type system infers tuple types and unions all error types.</div>
+  <ul class="behavior">
+    <li>Use <code>as const</code> on the array to get tuple inference instead of <code>T[]</code>.</li>
+    <li>Returns <code>Ok([])</code> for an empty array.</li>
+    <li>Short-circuits on the first <code>Err</code> — does not check remaining results.</li>
+  </ul>
+<pre><code><span class="fn">combine</span>([<span class="fn">ok</span>(<span class="num">1</span>), <span class="fn">ok</span>(<span class="str">'hello'</span>)] <span class="kw">as const</span>)
+<span class="cm">// Ok&lt;[number, string], never&gt;  →  Ok([1, 'hello'])</span>
+
+<span class="fn">combine</span>([<span class="fn">ok</span>(<span class="num">1</span>), <span class="fn">err</span>(<span class="str">'bad'</span>), <span class="fn">ok</span>(<span class="num">3</span>)])
+<span class="cm">// Err('bad')  →  first error wins</span></code></pre>
+</div>
+
+<div id="combineAsync" class="entry">
+  <div class="sig">combineAsync<span class="punc">(</span><span class="param">results</span>: readonly [...ResultAsyncs]<span class="punc">)</span>: ResultAsync<span class="punc">&lt;</span>[T1, ...], E1 | ...<span class="punc">&gt;</span></div>
+  <div class="desc">Async variant of <code>combine</code>. Awaits all ResultAsyncs in parallel, then merges the results. Same first-error-wins behavior and tuple type inference.</div>
+<pre><code><span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">combineAsync</span>([
+  <span class="fn">fetchUser</span>(<span class="num">1</span>),
+  <span class="fn">fetchConfig</span>()
+] <span class="kw">as const</span>)
+<span class="cm">// Result&lt;[User, Config], UserErr | ConfigErr&gt;</span></code></pre>
+</div>
+
+<div id="partition" class="entry">
+  <div class="sig">partition<span class="punc">&lt;</span><span class="param">T</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">results</span>: readonly Result&lt;T, E&gt;[]<span class="punc">)</span>: [T[], E[]]</div>
+  <div class="desc">Splits an array of Results into two arrays: success values and error values. Unlike <code>combine</code>, this processes every result — it doesn't short-circuit.</div>
+<pre><code><span class="kw">const</span> results = [<span class="fn">ok</span>(<span class="num">1</span>), <span class="fn">err</span>(<span class="str">'bad'</span>), <span class="fn">ok</span>(<span class="num">3</span>), <span class="fn">err</span>(<span class="str">'worse'</span>)]
+<span class="kw">const</span> [oks, errs] = <span class="fn">partition</span>(results)
+<span class="cm">// oks:  [1, 3]</span>
+<span class="cm">// errs: ['bad', 'worse']</span></code></pre>
+</div>
+
+<div id="flatten" class="entry">
+  <div class="sig">flatten<span class="punc">&lt;</span><span class="param">T</span>, <span class="param">E1</span>, <span class="param">E2</span><span class="punc">&gt;(</span><span class="param">result</span>: Result&lt;Result&lt;T, E2&gt;, E1&gt;<span class="punc">)</span>: Result<span class="punc">&lt;</span>T, E1 | E2<span class="punc">&gt;</span></div>
+  <div class="desc">Unwraps a nested Result. If you have a <code>Result&lt;Result&lt;T, E2&gt;, E1&gt;</code>, this collapses it to <code>Result&lt;T, E1 | E2&gt;</code>. Useful when you accidentally end up with double-wrapped results.</div>
+  <ul class="behavior">
+    <li>If the outer Result is <code>Err</code>, returns that <code>Err</code>.</li>
+    <li>If the outer is <code>Ok</code>, returns the inner Result as-is.</li>
+  </ul>
+<pre><code><span class="fn">flatten</span>(<span class="fn">ok</span>(<span class="fn">ok</span>(<span class="num">42</span>)))           <span class="cm">// Ok(42)</span>
+<span class="fn">flatten</span>(<span class="fn">ok</span>(<span class="fn">err</span>(<span class="str">'inner'</span>)))     <span class="cm">// Err('inner')</span>
+<span class="fn">flatten</span>(<span class="fn">err</span>(<span class="str">'outer'</span>))          <span class="cm">// Err('outer')</span></code></pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ERRORS & UTILITIES -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="border-b border-[#30363D] px-7 py-5 bg-surface-container-high">
+  <h2 class="font-mono text-[13px] uppercase tracking-widest text-[#ffb4ab] font-bold">Errors &amp; utilities</h2>
+</div>
+
+<div id="ResultError" class="entry">
+  <div class="sig"><span class="kw">class</span> ResultError<span class="punc">&lt;</span><span class="param">Code</span> extends string<span class="punc">&gt;</span> extends Error</div>
+  <div class="desc">A branded error class designed for use with <code>matchOn</code>. Extends <code>Error</code> with a typed <code>code</code> property and optional <code>context</code> data. The <code>Code</code> generic makes it possible to define discriminated union error types.</div>
+  <ul class="behavior">
+    <li>Properties: <code>.code</code> (readonly, typed), <code>.message</code> (from Error), <code>.context</code> (optional, any data).</li>
+    <li><code>.name</code> is set to <code>'ResultError'</code>.</li>
+    <li>Works as a standard Error — has stack trace, instanceof checks, etc.</li>
+  </ul>
+<pre><code><span class="kw">type</span> <span class="tp">AppError</span> =
+  | <span class="tp">ResultError</span>&lt;<span class="str">'NOT_FOUND'</span>&gt;
+  | <span class="tp">ResultError</span>&lt;<span class="str">'TIMEOUT'</span>&gt;
+
+<span class="kw">const</span> e = <span class="kw">new</span> <span class="tp">ResultError</span>(<span class="str">'NOT_FOUND'</span>, <span class="str">'User not found'</span>, { userId: <span class="num">123</span> })
+e.code     <span class="cm">// 'NOT_FOUND' (typed as literal)</span>
+e.message  <span class="cm">// 'User not found'</span>
+e.context  <span class="cm">// { userId: 123 }</span></code></pre>
+</div>
+
+<div id="isResultError" class="entry">
+  <div class="sig">isResultError<span class="punc">(</span><span class="param">value</span>: unknown<span class="punc">)</span>: value is ResultError<span class="punc">&lt;</span>string<span class="punc">&gt;</span></div>
+  <div class="desc">Type guard that narrows <code>unknown</code> to <code>ResultError</code>. Uses <code>instanceof</code> under the hood.</div>
+<pre><code><span class="kw">if</span> (<span class="fn">isResultError</span>(caught)) {
+  <span class="tp">console</span>.<span class="fn">log</span>(caught.code, caught.message)  <span class="cm">// typed access</span>
+}</code></pre>
+</div>
+
+<div id="resultToJSON" class="entry">
+  <div class="sig">resultToJSON<span class="punc">&lt;</span><span class="param">T</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">result</span>: Result&lt;T, E&gt;<span class="punc">)</span>: ResultJSON<span class="punc">&lt;</span>T, E<span class="punc">&gt;</span></div>
+  <div class="desc">Serializes a Result into a plain object with a <code>_tag</code> discriminant. The output is safe to pass through <code>JSON.stringify</code> for crossing process boundaries (API responses, message queues, etc).</div>
+  <ul class="behavior">
+    <li>Ok produces <code>{ _tag: 'Ok', value: T }</code>.</li>
+    <li>Err produces <code>{ _tag: 'Err', error: E }</code>.</li>
+  </ul>
+<pre><code><span class="fn">resultToJSON</span>(<span class="fn">ok</span>(<span class="num">42</span>))        <span class="cm">// { _tag: 'Ok', value: 42 }</span>
+<span class="fn">resultToJSON</span>(<span class="fn">err</span>(<span class="str">'bad'</span>))   <span class="cm">// { _tag: 'Err', error: 'bad' }</span>
+
+<span class="cm">// Round-trip</span>
+<span class="kw">const</span> wire = <span class="tp">JSON</span>.<span class="fn">stringify</span>(<span class="fn">resultToJSON</span>(result))</code></pre>
+</div>
+
+<div id="resultFromJSON" class="entry">
+  <div class="sig">resultFromJSON<span class="punc">&lt;</span><span class="param">T</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">json</span>: Record&lt;string, unknown&gt;<span class="punc">)</span>: Result<span class="punc">&lt;</span>T, E<span class="punc">&gt;</span></div>
+  <div class="desc">Deserializes a plain object back into a Result. Expects the <code>_tag</code> format produced by <code>resultToJSON</code>. Throws if the <code>_tag</code> is missing or invalid.</div>
+<pre><code><span class="kw">const</span> data = <span class="tp">JSON</span>.<span class="fn">parse</span>(wire)
+<span class="kw">const</span> result = <span class="fn">resultFromJSON</span>&lt;<span class="tp">User</span>, <span class="tp">AppError</span>&gt;(data)</code></pre>
+</div>
+
+<div id="InferOkType" class="entry">
+  <div class="sig"><span class="kw">type</span> InferOkType<span class="punc">&lt;</span><span class="param">R</span><span class="punc">&gt;</span> &nbsp;&nbsp;/&nbsp;&nbsp; <span class="kw">type</span> InferErrType<span class="punc">&lt;</span><span class="param">R</span><span class="punc">&gt;</span></div>
+  <div class="desc">Utility types that extract the success or error type from a <code>Result</code> or <code>ResultAsync</code>. Useful when you need to reference the inner types without manually spelling them out.</div>
+<pre><code><span class="kw">type</span> <span class="tp">MyResult</span> = <span class="tp">Result</span>&lt;<span class="tp">number</span>, <span class="tp">string</span>&gt;
+
+<span class="kw">type</span> <span class="tp">T</span> = <span class="tp">InferOkType</span>&lt;<span class="tp">MyResult</span>&gt;    <span class="cm">// number</span>
+<span class="kw">type</span> <span class="tp">E</span> = <span class="tp">InferErrType</span>&lt;<span class="tp">MyResult</span>&gt;   <span class="cm">// string</span>
+
+<span class="cm">// Also works with ResultAsync</span>
+<span class="kw">type</span> <span class="tp">T2</span> = <span class="tp">InferOkType</span>&lt;<span class="tp">ResultAsync</span>&lt;<span class="tp">User</span>, <span class="tp">AppError</span>&gt;&gt;  <span class="cm">// User</span></code></pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- ESLINT -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="border-b border-[#30363D] px-7 py-5 bg-surface-container-high">
+  <h2 class="font-mono text-[13px] uppercase tracking-widest text-secondary font-bold">ESLint preset</h2>
+</div>
+
+<div id="eslint" class="entry">
+  <div class="sig">import resultkit from <span class="str">'@valencets/resultkit/eslint'</span></div>
+  <div class="desc">resultkit ships two eslint flat-config presets: <code>strict</code> (errors) and <code>recommended</code> (warnings). Both enforce the same rules — the difference is severity.</div>
+
+<pre><code><span class="cm">// eslint.config.js</span>
+<span class="kw">import</span> resultkit <span class="kw">from</span> <span class="str">'@valencets/resultkit/eslint'</span>
+
+<span class="kw">export default</span> [
+  ...resultkit.<span class="fn">strict</span>,    <span class="cm">// or resultkit.recommended for warnings</span>
+  <span class="cm">// your overrides here</span>
+]</code></pre>
+
+  <div class="desc" style="margin-top: 20px;"><strong>Rules enforced:</strong></div>
+  <ul class="behavior" style="margin-top: 8px;">
+    <li><code>throw</code> statements → use <code>err()</code> or <code>fromThrowable()</code></li>
+    <li><code>try/catch</code> blocks → use <code>fromThrowable()</code> at the boundary</li>
+    <li><code>switch</code> statements → use <code>match()</code> or <code>matchOn()</code></li>
+    <li><code>.catch()</code> calls → use <code>ResultAsync.fromPromise()</code></li>
+    <li><code>.finally()</code> calls → use <code>.tap()</code> for cleanup</li>
+    <li><code>enum</code> declarations → use const unions with <code>match()</code></li>
+    <li><code>export default</code> → use named exports</li>
+  </ul>
+</div>
+
+<!-- Footer -->
+<div class="px-7 py-8 border-t border-[#30363D] text-center">
+  <p class="text-[13px] text-outline">
+    MIT · <a href="https://github.com/valencets/resultkit" class="text-primary-container hover:underline">valencets/resultkit</a> · v0.3.0 · TypeScript ≥ 5.9 · Node ≥ 22 · ESM only
+  </p>
+</div>
+
+</main>
+
+<!-- Active nav on click -->
+<script>
+(function() {
+  var links = document.querySelectorAll('#sidebar-nav a');
+  links.forEach(function(link) {
+    link.addEventListener('click', function() {
+      links.forEach(function(l) { l.classList.remove('active'); });
+      link.classList.add('active');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

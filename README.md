@@ -17,7 +17,7 @@ neverthrow is a good library. resultkit exists because neverthrow is permissive 
 | Unhandled Results | Silent | Enforced by team convention |
 | `throw` / `try/catch` | Your problem | eslint preset bans them, points to `fromThrowable` |
 | `switch` statements | Your problem | eslint preset bans them, points to `match()` |
-| `Promise.catch` | Your problem | eslint preset bans it, points to `ResultAsync.fromPromise` |
+| `.catch()` / `.finally()` | Your problem | eslint preset bans them, points to `ResultAsync.fromPromise` and `.tap()` |
 
 resultkit is for teams that want **guardrails**, not just types.
 
@@ -199,6 +199,8 @@ export default [
 | Ban `throw` | Use `err()` or `fromThrowable()` |
 | Ban `try/catch` | Use `fromThrowable()` at the boundary |
 | Ban `switch` | Use `match()` or `matchOn()` |
+| Ban `.catch()` | Use `ResultAsync.fromPromise()` |
+| Ban `.finally()` | Use `.tap()` for cleanup |
 | Ban `enum` | Use const unions with `match()` |
 | Ban `export default` | Named exports only |
 
