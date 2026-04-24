@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { ok, err } from '../result.js'
+import type { Result } from '../result.js'
 import { flatten } from '../flatten.js'
 
 describe('flatten()', () => {
@@ -18,7 +19,7 @@ describe('flatten()', () => {
   })
 
   it('passes through outer Err unchanged', () => {
-    const nested = err<typeof ok<number>, string>('outer')
+    const nested = err<Result<number, never>, string>('outer')
     const result = flatten(nested)
     expect(result.isErr()).toBe(true)
     if (result.isErr()) expect(result.error).toBe('outer')
