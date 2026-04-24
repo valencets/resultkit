@@ -41,6 +41,32 @@ describe('.match()', () => {
   })
 })
 
+describe('.match() object style', () => {
+  it('calls ok handler for Ok', () => {
+    const result = ok(5).match({
+      ok: (v) => v * 2,
+      err: () => 0
+    })
+    expect(result).toBe(10)
+  })
+
+  it('calls err handler for Err', () => {
+    const result = err<number, string>('bad').match({
+      ok: (v) => v * 2,
+      err: () => -1
+    })
+    expect(result).toBe(-1)
+  })
+
+  it('passes error to err handler', () => {
+    const result = err<number, string>('oops').match({
+      ok: () => 'ok',
+      err: (e) => `error: ${e}`
+    })
+    expect(result).toBe('error: oops')
+  })
+})
+
 describe('.unwrapOr()', () => {
   it('returns value for Ok', () => {
     expect(ok(5).unwrapOr(42)).toBe(5)
