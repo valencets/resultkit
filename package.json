@@ -12,7 +12,9 @@
   },
   "files": [
     "dist",
-    "eslint-preset.js"
+    "eslint-preset.js",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

@@ -13,6 +13,5 @@ export function resultToJSON<T, E> (result: Result<T, E>): ResultJSON<T, E> {
 export function resultFromJSON<T = unknown, E = unknown> (json: Record<string, unknown>): Result<T, E> {
   if (json._tag === 'Ok') return ok(json.value as T)
   if (json._tag === 'Err') return err(json.error as E)
-  // eslint-disable-next-line no-restricted-syntax
   throw new Error('Invalid Result JSON: missing or invalid _tag')
 }

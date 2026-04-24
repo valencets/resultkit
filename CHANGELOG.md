@@ -21,7 +21,6 @@
 - **`partition(results)`** splits `Result[]` into `[ok[], err[]]`.
 - **`flatten(result)`** unwraps `Result<Result<T, E2>, E1>` → `Result<T, E1 | E2>`.
 - **`resultToJSON(result)`** / **`resultFromJSON(json)`** for cross-boundary serialization.
-- **GitHub Actions CI** — validate, test, build on Node 22/23.
 
 ### Bug Fixes
 

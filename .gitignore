@@ -2,3 +2,5 @@ node_modules/
 dist/
 coverage/
 *.tsbuildinfo
+.cost-gate-session.json
+.scope-lock.json

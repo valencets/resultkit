@@ -50,9 +50,9 @@ export default [
       'no-restricted-syntax': 'off'
     }
   },
-  // match.ts throws on missing handlers — intentional runtime safety net
+  // These files throw intentionally as runtime safety nets
   {
-    files: ['src/match.ts'],
+    files: ['src/match.ts', 'src/serialization.ts', 'src/result.ts'],
     rules: {
       'no-restricted-syntax': [
         'error',

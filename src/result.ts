@@ -61,7 +61,6 @@ export class Ok<T, E> {
   }
 
   unwrapErr (): never {
-    // eslint-disable-next-line no-restricted-syntax
     throw new Error('Called unwrapErr on an Ok value', { cause: this.value })
   }
 
@@ -126,7 +125,6 @@ export class Err<T, E> {
 
   unwrap (): never {
     const suffix = typeof this.error === 'string' ? `: ${this.error}` : ''
-    // eslint-disable-next-line no-restricted-syntax
     throw new Error(`Called unwrap on an Err value${suffix}`, { cause: this.error })
   }
 

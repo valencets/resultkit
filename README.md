@@ -14,7 +14,7 @@ neverthrow is a good library. resultkit exists because neverthrow is permissive 
 |--|-----------|-----------|
 | Error types | `unknown` by default | `errorFn` required — you type every error |
 | Pattern matching | `.match()` method only | Standalone `match()`, `matchOn()` with exhaustive discriminated unions |
-| Unhandled Results | Silent | eslint preset warns on unused Results |
+| Unhandled Results | Silent | Enforced by team convention |
 | `throw` / `try/catch` | Your problem | eslint preset bans them, points to `fromThrowable` |
 | `switch` statements | Your problem | eslint preset bans them, points to `match()` |
 | `Promise.catch` | Your problem | eslint preset bans it, points to `ResultAsync.fromPromise` |
@@ -201,8 +201,6 @@ export default [
 | Ban `switch` | Use `match()` or `matchOn()` |
 | Ban `enum` | Use const unions with `match()` |
 | Ban `export default` | Named exports only |
-| Warn on `unknown` error types | Type your errors explicitly |
-| Warn on unhandled Results | Every Result must be `.match`ed, checked, or unwrapped |
 
 ## Design Principles
 
