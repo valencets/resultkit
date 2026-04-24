@@ -41,9 +41,9 @@
     "node": ">=22"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.0.0",
-    "neostandard": "^0.12.0",
-    "typescript": "^5.9.0",
-    "vitest": "^4.0.0"
+    "@vitest/coverage-v8": "^4.1.5",
+    "neostandard": "^0.13.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
   }
 }
