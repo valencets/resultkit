@@ -365,12 +365,15 @@ result.<span class="fn">match</span>({
       </div>
       <div class="bg-surface p-6 flex flex-col gap-3">
         <div class="flex items-center gap-2">
-          <span class="w-2 h-2 bg-error"></span>
-          <span class="font-mono text-error text-[10px] uppercase tracking-wider">Banned</span>
+          <span class="w-2 h-2 bg-tertiary-container"></span>
+          <span class="font-mono text-tertiary-container text-[10px] uppercase tracking-wider">Warned</span>
         </div>
-        <div class="font-bold text-on-surface text-[14px]">export default</div>
-        <p class="text-[13px] text-on-surface-variant leading-relaxed">→ named exports only</p>
+        <div class="font-bold text-on-surface text-[14px]">.unwrap() / .unwrapErr()</div>
+        <p class="text-[13px] text-on-surface-variant leading-relaxed">→ prefer <code class="text-secondary font-mono text-[12px]">.match()</code> or <code class="text-secondary font-mono text-[12px]">.unwrapOr()</code></p>
       </div>
+    </div>
+    <div class="px-6 py-3 border-t border-outline-variant text-[12px] text-on-surface-variant">
+      <code class="text-secondary font-mono text-[12px]">resultkit.opinionated</code> adds a ban on <code class="text-secondary font-mono text-[12px]">export default</code> (style rule, unrelated to error handling).
     </div>
   </section>
 

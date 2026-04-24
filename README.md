@@ -194,6 +194,10 @@ export default [
 
 ### What it enforces
 
+Three flat-config presets are exported. `strict` (errors) and `recommended` (warnings) share the same core error-handling rules; `opinionated` extends `strict` with stylistic rules that are unrelated to the error-handling thesis.
+
+**Core (strict / recommended):**
+
 | Rule | Rationale |
 |------|-----------|
 | Ban `throw` | Use `err()` or `fromThrowable()` |
@@ -202,6 +206,12 @@ export default [
 | Ban `.catch()` | Use `ResultAsync.fromPromise()` |
 | Ban `.finally()` | Use `.tap()` for cleanup |
 | Ban `enum` | Use const unions with `match()` |
+| Warn `.unwrap()` / `.unwrapErr()` | Prefer `.match()` or `.unwrapOr()` — override in test files |
+
+**Opinionated (adds):**
+
+| Rule | Rationale |
+|------|-----------|
 | Ban `export default` | Named exports only |
 
 ## Design Principles
