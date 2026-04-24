@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, expectTypeOf } from 'vitest'
 import { ok, err } from '../result.js'
+import type { Result } from '../result.js'
 import { okAsync, errAsync } from '../result-async.js'
 import { combine, combineAsync } from '../combine.js'
 
@@ -33,6 +34,31 @@ describe('combine()', () => {
     expect(result.isErr()).toBe(true)
     if (result.isErr()) {
       expect(result.error).toBe('first')
+    }
+  })
+})
+
+describe('combine() heterogeneous tuples', () => {
+  it('infers tuple types and unions errors', () => {
+    const result = combine([
+      ok<number, 'num_err'>(1),
+      ok<string, 'str_err'>('hello')
+    ] as const)
+    expectTypeOf(result).toEqualTypeOf<Result<[number, string], 'num_err' | 'str_err'>>()
+    expect(result.isOk()).toBe(true)
+    if (result.isOk()) {
+      expect(result.value).toEqual([1, 'hello'])
+    }
+  })
+
+  it('returns first error from mixed error types', () => {
+    const result = combine([
+      ok<number, 'num_err'>(1),
+      err<string, 'str_err'>('str_err')
+    ])
+    expect(result.isErr()).toBe(true)
+    if (result.isErr()) {
+      expect(result.error).toBe('str_err')
     }
   })
 })
