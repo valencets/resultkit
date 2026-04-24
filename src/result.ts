@@ -22,7 +22,7 @@ export class Ok<T, E> {
   }
 
   mapErr<F> (_fn: (error: E) => F): Result<T, F> {
-    return new Ok(this.value)
+    return this as unknown as Ok<T, F>
   }
 
   andThen<U, F> (fn: (value: T) => Result<U, F>): Result<U, E | F> {
@@ -30,7 +30,7 @@ export class Ok<T, E> {
   }
 
   orElse<U, F> (_fn: (error: E) => Result<U, F>): Result<T | U, F> {
-    return new Ok(this.value)
+    return this as unknown as Ok<T, F>
   }
 
   match<A, B = A> (okFn: (value: T) => A, _errFn: (error: E) => B): A | B {
@@ -71,7 +71,7 @@ export class Err<T, E> {
   }
 
   map<U> (_fn: (value: T) => U): Result<U, E> {
-    return new Err(this.error)
+    return this as unknown as Err<U, E>
   }
 
   mapErr<F> (fn: (error: E) => F): Result<T, F> {
@@ -79,7 +79,7 @@ export class Err<T, E> {
   }
 
   andThen<U, F> (_fn: (value: T) => Result<U, F>): Result<U, E | F> {
-    return new Err(this.error)
+    return this as unknown as Err<U, E | F>
   }
 
   orElse<U, F> (fn: (error: E) => Result<U, F>): Result<T | U, F> {
