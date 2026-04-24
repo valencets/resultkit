@@ -38,7 +38,7 @@ export default [
   },
   // Config files require export default by convention
   {
-    files: ['vitest.config.ts', 'eslint.config.js'],
+    files: ['vitest.config.ts', 'eslint.config.js', 'eslint-preset.js'],
     rules: {
       'no-restricted-syntax': 'off'
     }

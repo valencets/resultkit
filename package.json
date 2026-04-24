@@ -7,10 +7,12 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./eslint": "./eslint-preset.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "eslint-preset.js"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
