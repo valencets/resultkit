@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.4.0 — 2026-04-26
+
+### Breaking Changes
+
+- **Eslint preset default export is now a preset bundle.** Import `strict`, `recommended`, or `opinionated` from the default export instead of using the default export as a single flat config.
+- **`export default` banning moved to `opinionated`.** `strict` and `recommended` now focus on Result-oriented error-handling rules.
+
+### New Features
+
+- **`unwrap()` / `unwrapErr()` warnings in the eslint preset.** Production code is guided toward `match()`, `matchOn()`, or safe fallback handling instead of unchecked unwrapping.
+- **`opinionated` eslint preset** combines `strict` Result-oriented rules with style rules like banning `export default`.
+
+### Documentation
+
+- Add the GitHub Pages homepage URL to npm package metadata.
+- Clarify the Node 22 engine floor around the active LTS/security support schedule.
+- Document `combineAsync` ordering behavior and the split eslint preset model.
+- Refresh docs footer/test metadata and coverage badge.
+
+### Internal
+
+- Regenerate the lockfile to resolve Vite CVEs.
+- Add `eslint` as a direct development dependency so release validation has a local eslint binary.
+
 ## 0.3.0 — 2026-04-24
 
 ### Breaking Changes
