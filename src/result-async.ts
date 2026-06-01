@@ -9,6 +9,14 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     this._promise = promise
   }
 
+  /**
+   * Wraps a promise and converts rejections into a typed `Err`.
+   *
+   * This is the primary safe way to bring external async work into the Result world.
+   *
+   * @param promise - The promise to wrap.
+   * @param errorFn - Function that converts any rejection into your error type.
+   */
   static fromPromise<T, E> (
     promise: PromiseLike<T>,
     errorFn: (cause: Caught) => E
@@ -21,6 +29,12 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     )
   }
 
+  /**
+   * Wraps a promise that is expected to never reject.
+   *
+   * Only use this when you are certain the promise cannot reject.
+   * If it does reject, the rejection will escape unhandled.
+   */
   static fromSafePromise<T, E = never> (
     promise: PromiseLike<T>
   ): ResultAsync<T, E> {
@@ -29,6 +43,13 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     )
   }
 
+  /**
+   * Transforms the successful value.
+   *
+   * @throws This method does **not** catch exceptions. The mapper must not throw.
+   * Use `.andThen()` + explicit `err()`/`errAsync()`, or wrap fallible work with
+   * `fromThrowableAsync`.
+   */
   map<U> (fn: (value: T) => U | Promise<U>): ResultAsync<U, E> {
     return new ResultAsync(
       this._promise.then(async (result) => {
@@ -46,6 +67,13 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     )
   }
 
+  /**
+   * Transforms the error value.
+   *
+   * @throws This method does **not** catch exceptions. The mapper must not throw.
+   * Use `.andThen()` + explicit `err()`/`errAsync()`, or wrap fallible work with
+   * `fromThrowableAsync`.
+   */
   mapErr<F> (fn: (error: E) => F | Promise<F>): ResultAsync<T, F> {
     return new ResultAsync(
       this._promise.then(async (result) => {
@@ -63,6 +91,12 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     )
   }
 
+  /**
+   * Chains a fallible operation that returns another Result or ResultAsync.
+   *
+   * @throws This method does **not** catch exceptions. The callback must not throw.
+   * Return an explicit `err()` / `errAsync()` for failures instead of throwing.
+   */
   andThen<U, F> (
     fn: (value: T) => Result<U, F> | ResultAsync<U, F>
   ): ResultAsync<U, E | F> {
@@ -84,6 +118,12 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     )
   }
 
+  /**
+   * Provides a recovery Result when the current value is an Err.
+   *
+   * @throws This method does **not** catch exceptions. The callback must not throw.
+   * Return an explicit `err()` / `errAsync()` for failures instead of throwing.
+   */
   orElse<U, F> (
     fn: (error: E) => Result<U, F> | ResultAsync<U, F>
   ): ResultAsync<T | U, F> {
@@ -159,6 +199,10 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     return defaultValue
   }
 
+  /**
+   * Standard Promise `.then` implementation.
+   * Rejection reasons are typed as `Caught`.
+   */
   then<A, B> (
     onFulfilled?: ((result: Result<T, E>) => A | PromiseLike<A>) | null,
     onRejected?: ((reason: Caught) => B | PromiseLike<B>) | null
