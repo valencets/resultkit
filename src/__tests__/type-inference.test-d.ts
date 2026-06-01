@@ -56,6 +56,20 @@ describe('.andThen() type inference', () => {
   })
 })
 
+describe('transformation error type preservation', () => {
+  it('preserves error types through mapErr', () => {
+    const result = err<number, 'INPUT_ERROR'>('INPUT_ERROR').mapErr(() => ({ code: 'OUTPUT_ERROR' as const }))
+    expectTypeOf(result).toEqualTypeOf<Result<number, { code: 'OUTPUT_ERROR' }>>()
+  })
+
+  it('preserves error unions through andThen', () => {
+    const result = ok<number, 'INPUT_ERROR'>(2).andThen((value) =>
+      ok<string, 'CHAIN_ERROR'>(`${value}`)
+    )
+    expectTypeOf(result).toEqualTypeOf<Result<string, 'INPUT_ERROR' | 'CHAIN_ERROR'>>()
+  })
+})
+
 describe('.match() type inference', () => {
   it('returns union of branch types', () => {
     const result = ok<number, string>(5).match(
