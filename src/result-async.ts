@@ -11,8 +11,13 @@ import type { Caught } from './internal-types.js'
 export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
   private readonly _promise: Promise<Result<T, E>>
 
-  constructor (promise: Promise<Result<T, E>>) {
+  private constructor (promise: Promise<Result<T, E>>) {
     this._promise = promise
+  }
+
+  /** @internal */
+  static __internalCreate<T, E> (promise: Promise<Result<T, E>>): ResultAsync<T, E> {
+    return new ResultAsync(promise)
   }
 
   /**
@@ -62,13 +67,9 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
         if (result.isErr()) {
           return err<U, E>(result.error)
         }
-        try {
-          const mapped = fn(result.value)
-          const resolved = mapped instanceof Promise ? await mapped : mapped
-          return ok<U, E>(resolved)
-        } catch (e) {
-          return err<U, E>((e as Caught) as E)
-        }
+        const mapped = fn(result.value)
+        const resolved = mapped instanceof Promise ? await mapped : mapped
+        return ok<U, E>(resolved)
       })
     )
   }
@@ -86,13 +87,9 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
         if (result.isOk()) {
           return ok<T, F>(result.value)
         }
-        try {
-          const mapped = fn(result.error)
-          const resolved = mapped instanceof Promise ? await mapped : mapped
-          return err<T, F>(resolved)
-        } catch (e) {
-          return err<T, F>((e as Caught) as F)
-        }
+        const mapped = fn(result.error)
+        const resolved = mapped instanceof Promise ? await mapped : mapped
+        return err<T, F>(resolved)
       })
     )
   }
@@ -111,15 +108,11 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
         if (result.isErr()) {
           return err<U, E | F>(result.error)
         }
-        try {
-          const next = fn(result.value)
-          if (next instanceof ResultAsync) {
-            return next._promise
-          }
-          return next as Result<U, E | F>
-        } catch (e) {
-          return err<U, E | F>((e as Caught) as E | F)
+        const next = fn(result.value)
+        if (next instanceof ResultAsync) {
+          return next._promise
         }
+        return next as Result<U, E | F>
       })
     )
   }
@@ -138,15 +131,11 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
         if (result.isOk()) {
           return ok<T | U, F>(result.value)
         }
-        try {
-          const next = fn(result.error)
-          if (next instanceof ResultAsync) {
-            return next._promise
-          }
-          return next as Result<T | U, F>
-        } catch (e) {
-          return err<T | U, F>((e as Caught) as F)
+        const next = fn(result.error)
+        if (next instanceof ResultAsync) {
+          return next._promise
         }
+        return next as Result<T | U, F>
       })
     )
   }
@@ -221,7 +210,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
  * Creates a successful `ResultAsync`.
  */
 export function okAsync<T, E = never> (value: T): ResultAsync<T, E> {
-  return new ResultAsync(Promise.resolve(ok<T, E>(value)))
+  return __createResultAsync(Promise.resolve(ok<T, E>(value)))
 }
 
 /**
@@ -229,5 +218,13 @@ export function okAsync<T, E = never> (value: T): ResultAsync<T, E> {
  * The error type defaults to `Caught` (anything that can be thrown or serialized).
  */
 export function errAsync<T = never, E = Caught> (error: E): ResultAsync<T, E> {
-  return new ResultAsync(Promise.resolve(err<T, E>(error)))
+  return __createResultAsync(Promise.resolve(err<T, E>(error)))
+}
+
+/**
+ * Internal-only factory for creating ResultAsync instances.
+ * All package-internal code should use this instead of `new ResultAsync(...)`.
+ */
+export function __createResultAsync<T, E> (promise: Promise<Result<T, E>>): ResultAsync<T, E> {
+  return ResultAsync.__internalCreate(promise)
 }
