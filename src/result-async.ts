@@ -171,6 +171,6 @@ export function okAsync<T, E = never> (value: T): ResultAsync<T, E> {
   return new ResultAsync(Promise.resolve(ok<T, E>(value)))
 }
 
-export function errAsync<T = never, E = unknown> (error: E): ResultAsync<T, E> {
+export function errAsync<T = never, E = Caught> (error: E): ResultAsync<T, E> {
   return new ResultAsync(Promise.resolve(err<T, E>(error)))
 }
