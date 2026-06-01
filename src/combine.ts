@@ -1,6 +1,7 @@
 import { ok, err } from './result.js'
 import type { Result } from './result.js'
 import { ResultAsync } from './result-async.js'
+import type { Value } from './internal-types.js'
 
 type CombineOkTypes<T extends readonly Result<unknown, unknown>[]> = {
   [K in keyof T]: T[K] extends Result<infer U, unknown> ? U : never
@@ -12,7 +13,7 @@ type CombineErrTypes<T extends readonly Result<unknown, unknown>[]> =
 export function combine<T extends readonly Result<unknown, unknown>[]> (
   results: readonly [...T]
 ): Result<CombineOkTypes<T>, CombineErrTypes<T>> {
-  const values: unknown[] = []
+  const values: Value[] = []
   for (const result of results) {
     if (result.isErr()) return err(result.error) as Result<CombineOkTypes<T>, CombineErrTypes<T>>
     values.push(result.value)
