@@ -40,4 +40,14 @@ describe('fromThrowableAsync()', () => {
     const result = await safeAdd(3, 4)
     if (result.isOk()) expect(result.value).toBe(7)
   })
+
+  it('supports functions that return a value synchronously', async () => {
+    const safeSync = fromThrowableAsync(
+      (x: number) => x * 2,
+      () => 'failed'
+    )
+    const result = await safeSync(21)
+    expect(result.isOk()).toBe(true)
+    if (result.isOk()) expect(result.value).toBe(42)
+  })
 })
