@@ -1,11 +1,18 @@
 import type { Result } from './result.js'
 
+/**
+ * Split an array of Results into two arrays: [okValues, errValues].
+ * Preserves original order within each group.
+ */
 export function partition<T, E> (results: readonly Result<T, E>[]): [T[], E[]] {
-  const oks: T[] = []
-  const errs: E[] = []
+  const values: T[] = []
+  const errors: E[] = []
   for (const result of results) {
-    if (result.isOk()) oks.push(result.value)
-    else errs.push(result.error)
+    if (result.isOk()) {
+      values.push(result.value)
+    } else {
+      errors.push(result.error)
+    }
   }
-  return [oks, errs]
+  return [values, errors]
 }
