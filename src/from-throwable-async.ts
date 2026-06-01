@@ -2,6 +2,10 @@ import { ResultAsync } from './result-async.js'
 import { err } from './result.js'
 import type { Caught, FnArgs } from './internal-types.js'
 
+/**
+ * Wraps an async function so that any thrown/rejected values are converted into typed Errs.
+ * The errorFn receives a Caught value.
+ */
 export function fromThrowableAsync<Args extends FnArgs, R, E> (
   fn: (...args: Args) => Promise<R>,
   errorFn: (cause: Caught) => E
