@@ -123,3 +123,17 @@ it('cannot be constructed directly from outside the module (regression)', () => 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _bad = new ResultAsync(Promise.resolve(ok(42)))
 })
+
+it('all internal ResultAsync construction goes through the factory (discipline)', async () => {
+  // This enforces the rule documented on __createResultAsync / __internalCreate.
+  // Only the one inside __internalCreate itself is allowed to do `new ResultAsync`.
+  // Use any to avoid requiring @types/node in the base tsconfig used by `tsc --noEmit`.
+  // Vitest provides the Node environment at runtime.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fs: any = await import('fs/promises' as any)
+  const src = await fs.readFile(new URL('../result-async.ts', import.meta.url), 'utf8')
+  // Count real code occurrences (the JSDoc example in backticks also matches the naive regex).
+  const occurrences = [...src.matchAll(/^\s*(?:return\s+)?new ResultAsync\s*\(/gm)]
+  // Exactly one: the implementation inside __internalCreate.
+  expect(occurrences.length).toBe(1)
+})

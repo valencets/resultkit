@@ -32,7 +32,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     promise: PromiseLike<T>,
     errorFn: (cause: Caught) => E
   ): ResultAsync<T, E> {
-    return new ResultAsync(
+    return __createResultAsync(
       Promise.resolve(promise).then(
         (value) => ok<T, E>(value),
         (cause: Caught) => err<T, E>(errorFn(cause))
@@ -49,7 +49,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
   static fromSafePromise<T, E = never> (
     promise: PromiseLike<T>
   ): ResultAsync<T, E> {
-    return new ResultAsync(
+    return __createResultAsync(
       Promise.resolve(promise).then((value) => ok<T, E>(value))
     )
   }
@@ -62,7 +62,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
    * `fromThrowableAsync`.
    */
   map<U> (fn: (value: T) => U | Promise<U>): ResultAsync<U, E> {
-    return new ResultAsync(
+    return __createResultAsync(
       this._promise.then(async (result) => {
         if (result.isErr()) {
           return err<U, E>(result.error)
@@ -82,7 +82,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
    * `fromThrowableAsync`.
    */
   mapErr<F> (fn: (error: E) => F | Promise<F>): ResultAsync<T, F> {
-    return new ResultAsync(
+    return __createResultAsync(
       this._promise.then(async (result) => {
         if (result.isOk()) {
           return ok<T, F>(result.value)
@@ -103,7 +103,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
   andThen<U, F> (
     fn: (value: T) => Result<U, F> | ResultAsync<U, F>
   ): ResultAsync<U, E | F> {
-    return new ResultAsync(
+    return __createResultAsync(
       this._promise.then((result) => {
         if (result.isErr()) {
           return err<U, E | F>(result.error)
@@ -126,7 +126,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
   orElse<U, F> (
     fn: (error: E) => Result<U, F> | ResultAsync<U, F>
   ): ResultAsync<T | U, F> {
-    return new ResultAsync(
+    return __createResultAsync(
       this._promise.then((result) => {
         if (result.isOk()) {
           return ok<T | U, F>(result.value)
@@ -141,7 +141,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
   }
 
   tap (fn: (value: T) => void): ResultAsync<T, E> {
-    return new ResultAsync(
+    return __createResultAsync(
       this._promise.then((result) => {
         if (result.isOk()) fn(result.value)
         return result
@@ -150,7 +150,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
   }
 
   tapErr (fn: (error: E) => void): ResultAsync<T, E> {
-    return new ResultAsync(
+    return __createResultAsync(
       this._promise.then((result) => {
         if (result.isErr()) fn(result.error)
         return result
