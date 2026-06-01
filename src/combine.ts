@@ -16,7 +16,7 @@ export function combine<T extends readonly Result<unknown, unknown>[]> (
   const values: Value[] = []
   for (const result of results) {
     if (result.isErr()) return err(result.error) as Result<CombineOkTypes<T>, CombineErrTypes<T>>
-    values.push(result.value)
+    values.push(result.value as Value)
   }
   return ok(values) as Result<CombineOkTypes<T>, CombineErrTypes<T>>
 }
