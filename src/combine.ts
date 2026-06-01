@@ -1,6 +1,6 @@
 import { ok, err } from './result.js'
 import type { Result } from './result.js'
-import { ResultAsync } from './result-async.js'
+import { ResultAsync, __createResultAsync } from './result-async.js'
 import type { Value } from './internal-types.js'
 
 type CombineOkTypes<T extends readonly Result<unknown, Value>[]> = {
@@ -38,7 +38,7 @@ type CombineAsyncErrTypes<T extends readonly ResultAsync<unknown, Value>[]> =
 export function combineAsync<T extends readonly ResultAsync<unknown, Value>[]> (
   results: readonly [...T]
 ): ResultAsync<CombineAsyncOkTypes<T>, CombineAsyncErrTypes<T>> {
-  return new ResultAsync(
+  return __createResultAsync(
     Promise.all(results.map(async (r) => r)).then(
       (settled) => combine(settled) as unknown as Result<CombineAsyncOkTypes<T>, CombineAsyncErrTypes<T>>
     )

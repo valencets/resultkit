@@ -1,4 +1,4 @@
-import { ResultAsync } from './result-async.js'
+import { ResultAsync, __createResultAsync } from './result-async.js'
 import type { Caught, Value } from './internal-types.js'
 
 /**
@@ -84,7 +84,7 @@ export class Ok<T, E> {
 
   /** Convert to a ResultAsync. */
   toAsync (): ResultAsync<T, E> {
-    return new ResultAsync(Promise.resolve(this as Result<T, E>))
+    return __createResultAsync(Promise.resolve(this as Result<T, E>))
   }
 }
 
@@ -166,7 +166,7 @@ export class Err<T, E> {
 
   /** Convert to ResultAsync. */
   toAsync (): ResultAsync<T, E> {
-    return new ResultAsync(Promise.resolve(this as Result<T, E>))
+    return __createResultAsync(Promise.resolve(this as Result<T, E>))
   }
 }
 
