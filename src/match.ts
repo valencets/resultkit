@@ -6,10 +6,10 @@
  * Throws if no handler matches and no `_` fallback is provided.
  */
 
-// Partial with _ (checked first)
+// Partial with _ (checked first — if _ present, this matches)
 export function match<V extends string, R> (
   value: V,
-  handlers: Partial<Record<V | "_", (value: V) => R>>
+  handlers: { readonly [K in V]?: (value: K) => R } & { readonly _: (value: V) => R }
 ): R
 
 // Exhaustive (all keys required, no _)

@@ -59,7 +59,14 @@ describe('parseResultJSON() strict untrusted parser', () => {
     const errResult = parseResultJSON<number, string>({ _tag: 'Err', error: 'boom' })
 
     expect(okResult.isOk()).toBe(true)
-    expect(errResult.isErr()).toBe(true)
+    if (okResult.isOk()) {
+      expect(okResult.value.isOk()).toBe(true)
+    }
+
+    expect(errResult.isOk()).toBe(true)
+    if (errResult.isOk()) {
+      expect(errResult.value.isErr()).toBe(true)
+    }
   })
 
   it.each([
@@ -74,7 +81,7 @@ describe('parseResultJSON() strict untrusted parser', () => {
     { _tag: 'Err', error: undefined },
     { _tag: 'Err', error: null },
   ])('returns typed Err for invalid input %o (strict)', (input) => {
-    const r = parseResultJSON<number, string>(input as any)
+    const r = parseResultJSON<number, string>(input as unknown as Parameters<typeof parseResultJSON>[0])
     expect(r.isErr()).toBe(true)
     if (r.isErr()) {
       expect(r.error.code).toBe('INVALID_RESULT_JSON')

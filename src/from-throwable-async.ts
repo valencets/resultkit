@@ -11,17 +11,17 @@ import type { Result } from './result.js'
  * @param fn - The function to wrap. Can return a value or a Promise.
  * @param errorFn - Maps any thrown or rejected value into your error type.
  */
-export function fromThrowableAsync<Args extends FnArgs, T, E>(
+export function fromThrowableAsync<Args extends FnArgs, T, E> (
   fn: (...args: Args) => T | PromiseLike<T>,
-  errorFn: (cause: Caught) => E,
+  errorFn: (cause: Caught) => E
 ): (...args: Args) => ResultAsync<T, E> {
   return (...args: Args) => __createResultAsync(resolveThrowable(fn, errorFn, args))
 }
 
-async function resolveThrowable<Args extends FnArgs, T, E>(
+async function resolveThrowable<Args extends FnArgs, T, E> (
   fn: (...args: Args) => T | PromiseLike<T>,
   errorFn: (cause: Caught) => E,
-  args: Args,
+  args: Args
 ): Promise<Result<T, E>> {
   try {
     return ok(await fn(...args))
