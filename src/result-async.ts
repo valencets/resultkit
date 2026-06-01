@@ -1,5 +1,6 @@
 import { ok, err } from './result.js'
 import type { Result } from './result.js'
+import type { Caught } from './internal-types.js'
 
 export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
   private readonly _promise: Promise<Result<T, E>>
@@ -10,12 +11,12 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
 
   static fromPromise<T, E> (
     promise: PromiseLike<T>,
-    errorFn: (e: unknown) => E
+    errorFn: (cause: Caught) => E
   ): ResultAsync<T, E> {
     return new ResultAsync(
       Promise.resolve(promise).then(
         (value) => ok<T, E>(value),
-        (e: unknown) => err<T, E>(errorFn(e))
+        (cause: Caught) => err<T, E>(errorFn(cause))
       )
     )
   }
@@ -39,7 +40,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
           const resolved = mapped instanceof Promise ? await mapped : mapped
           return ok<U, E>(resolved)
         } catch (e) {
-          return err<U, E>(e as E)
+          return err<U, E>((e as Caught) as E)
         }
       })
     )
@@ -56,7 +57,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
           const resolved = mapped instanceof Promise ? await mapped : mapped
           return err<T, F>(resolved)
         } catch (e) {
-          return err<T, F>(e as F)
+          return err<T, F>((e as Caught) as F)
         }
       })
     )
@@ -77,7 +78,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
           }
           return next as Result<U, E | F>
         } catch (e) {
-          return err<U, E | F>(e as E | F)
+          return err<U, E | F>((e as Caught) as E | F)
         }
       })
     )
@@ -98,7 +99,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
           }
           return next as Result<T | U, F>
         } catch (e) {
-          return err<T | U, F>(e as F)
+          return err<T | U, F>((e as Caught) as F)
         }
       })
     )
@@ -160,7 +161,7 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
 
   then<A, B> (
     onFulfilled?: ((result: Result<T, E>) => A | PromiseLike<A>) | null,
-    onRejected?: ((reason: unknown) => B | PromiseLike<B>) | null
+    onRejected?: ((reason: Caught) => B | PromiseLike<B>) | null
   ): PromiseLike<A | B> {
     return this._promise.then(onFulfilled, onRejected)
   }
