@@ -3,12 +3,6 @@ import type { Result } from './result.js'
 import { ResultAsync } from './result-async.js'
 import type { Value } from './internal-types.js'
 
-/**
- * Combines an array of Results into a single Result containing an array of successes,
- * or the first error encountered.
- */
-export function combine<T extends readonly Result<unknown, unknown>[]> (
-
 type CombineOkTypes<T extends readonly Result<unknown, unknown>[]> = {
   [K in keyof T]: T[K] extends Result<infer U, unknown> ? U : never
 }
