@@ -173,7 +173,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 56px; }
         <span class="font-mono text-error text-[11px] uppercase tracking-wider">Strict errors</span>
       </div>
       <h3 class="text-body-bold font-bold text-on-surface text-[16px] leading-snug">No <code class="text-error font-mono text-[14px]">unknown</code> escape hatches</h3>
-      <p class="text-body-reg text-on-surface-variant leading-relaxed">Every boundary function requires <code class="font-mono text-[12px] text-primary-container">errorFn</code>. If a function can fail, the caller sees the error type in the signature. Always.</p>
+      <p class="text-body-reg text-on-surface-variant leading-relaxed">Every boundary function requires <code class="font-mono text-[12px] text-primary-container">errorFn</code>. Internal <code class="font-mono text-[12px] text-primary-container">Caught</code> / <code class="font-mono text-[12px] text-primary-container">Value</code> types make the "anything that can be thrown" contract explicit at every edge.</p>
     </div>
     <div class="bg-surface p-8 flex flex-col gap-4">
       <div class="flex items-center gap-2">
@@ -248,6 +248,11 @@ result.<span class="fn">match</span>({
         <div class="text-outline text-[10px] uppercase tracking-wider mb-2">Escape hatches</div>
         <div class="text-error bg-[#3a1d1d] px-3 py-1.5 border-l-2 border-error">- throw / try-catch / .catch() <span class="cm">// allowed</span></div>
         <div class="text-secondary bg-[#1a3820] px-3 py-1.5 border-l-2 border-secondary">+ eslint preset bans all of them</div>
+      </div>
+      <div>
+        <div class="text-outline text-[10px] uppercase tracking-wider mb-2">Mappers &amp; boundaries</div>
+        <div class="text-error bg-[#3a1d1d] px-3 py-1.5 border-l-2 border-error">- mappers can throw <span class="cm">// silently swallowed</span></div>
+        <div class="text-secondary bg-[#1a3820] px-3 py-1.5 border-l-2 border-secondary">+ mappers must not throw (only explicit boundaries catch)</div>
       </div>
       <div>
         <div class="text-outline text-[10px] uppercase tracking-wider mb-2">Extras</div>

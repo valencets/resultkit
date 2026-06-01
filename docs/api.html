@@ -130,6 +130,8 @@ pre {
     <a href="#fromNullable" class="side-link">fromNullable()</a>
     <a href="#fromPromise" class="side-link">ResultAsync.fromPromise()</a>
     <a href="#fromSafePromise" class="side-link">ResultAsync.fromSafePromise()</a>
+    <div class="px-4 pt-4 pb-1 font-mono text-[9px] uppercase tracking-widest text-outline">Internal (for boundaries)</div>
+    <a href="#internal-types" class="side-link">Caught / Value / FnArgs</a>
     <div class="px-4 pt-4 pb-1 font-mono text-[9px] uppercase tracking-widest text-outline">Methods</div>
     <a href="#isOk" class="side-link">isOk() / isErr()</a>
     <a href="#map" class="side-link">map()</a>
@@ -208,11 +210,10 @@ pre {
 </div>
 
 <div id="fromThrowable" class="entry">
-  <div class="sig">fromThrowable<span class="punc">&lt;</span><span class="param">A</span>, <span class="param">R</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">fn</span>: (...args: A) =&gt; R, <span class="param">errorFn</span>: (e: unknown) =&gt; E<span class="punc">)</span>: (...args: A) =&gt; Result<span class="punc">&lt;</span>R, E<span class="punc">&gt;</span></div>
-  <div class="desc">Wraps a function that might throw into one that returns a <code>Result</code>. The <code>errorFn</code> parameter is <strong>required</strong> — this is how resultkit enforces typed errors at every boundary. If <code>fn</code> succeeds, you get <code>Ok</code>. If it throws, the caught error is passed to <code>errorFn</code> and you get <code>Err</code>.</div>
+  <div class="sig">fromThrowable<span class="punc">&lt;</span><span class="param">Args</span>, <span class="param">R</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">fn</span>: (...args: Args) =&gt; R, <span class="param">errorFn</span>: (cause: Caught) =&gt; E<span class="punc">)</span>: (...args: Args) =&gt; Result<span class="punc">&lt;</span>R, E<span class="punc">&gt;</span></div>
+  <div class="desc">Wraps a function that might throw into one that returns a <code>Result</code>. The <code>errorFn</code> parameter is <strong>required</strong> — this is how resultkit enforces typed errors at every boundary. <code>errorFn</code> receives a <code>Caught</code> value (anything that can be thrown).</div>
   <ul class="behavior">
     <li>Returns a new function with the same arguments as <code>fn</code>, but returning <code>Result&lt;R, E&gt;</code> instead of <code>R</code>.</li>
-    <li><code>errorFn</code> receives <code>unknown</code> because JavaScript can throw anything. You decide how to type it.</li>
     <li>This is the only place <code>try/catch</code> should exist in your codebase.</li>
   </ul>
 <pre><code><span class="kw">const</span> safeParse = <span class="fn">fromThrowable</span>(
@@ -225,8 +226,20 @@ pre {
 </div>
 
 <div id="fromThrowableAsync" class="entry">
-  <div class="sig">fromThrowableAsync<span class="punc">&lt;</span><span class="param">A</span>, <span class="param">R</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">fn</span>: (...args: A) =&gt; Promise&lt;R&gt;, <span class="param">errorFn</span>: (e: unknown) =&gt; E<span class="punc">)</span>: (...args: A) =&gt; ResultAsync<span class="punc">&lt;</span>R, E<span class="punc">&gt;</span></div>
-  <div class="desc">Same as <code>fromThrowable</code> but for async functions. Wraps a function that returns a Promise into one that returns <code>ResultAsync</code>. Catches both synchronous throws and promise rejections.</div>
+  <div class="sig">fromThrowableAsync<span class="punc">&lt;</span><span class="param">Args</span>, <span class="param">R</span>, <span class="param">E</span><span class="punc">&gt;(</span><span class="param">fn</span>: (...args: Args) =&gt; PromiseLike&lt;R&gt;, <span class="param">errorFn</span>: (cause: Caught) =&gt; E<span class="punc">)</span>: (...args: Args) =&gt; ResultAsync<span class="punc">&lt;</span>R, E<span class="punc">&gt;</span></div>
+  <div class="desc">Same as <code>fromThrowable</code> but for async functions. The <code>errorFn</code> receives a <code>Caught</code> value for both sync throws and promise rejections.</div>
+</div>
+
+<div id="internal-types" class="entry">
+  <div class="sig">Caught / Value / FnArgs <span class="punc">(internal)</span></div>
+  <div class="desc">These types are not re-exported from the main entry point. They exist so boundary functions can be precise about what they accept.</div>
+  <ul class="behavior">
+    <li><code>Value</code> — anything that can be safely serialized or caught.</li>
+    <li><code>Caught</code> — alias for <code>Value</code>, used for thrown/rejected values.</li>
+    <li><code>FnArgs</code> — tuple of <code>Value</code>s, used for function argument lists.</li>
+  </ul>
+  <div class="desc">Used internally by <code>fromThrowable*</code>, <code>ResultError</code>, and error paths in <code>ResultAsync</code>.</div>
+</div>
 <pre><code><span class="kw">const</span> safeFetch = <span class="fn">fromThrowableAsync</span>(
   <span class="kw">async</span> (url: <span class="tp">string</span>) =&gt; {
     <span class="kw">const</span> r = <span class="kw">await</span> <span class="fn">fetch</span>(url)
