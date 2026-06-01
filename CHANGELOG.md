@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+### New Features
+
+- **Internal types for boundary safety** (`Caught`, `Value`, `FnArgs`). These are not re-exported but are now used consistently inside boundary functions (`fromThrowable*`, `ResultError`, `ResultAsync.fromPromise`, etc.) to make the "anything that can be thrown or serialized" contract explicit.
+- `errAsync` now defaults its error type to `Caught` instead of `unknown`.
+
+### Documentation
+
+- Significantly improved JSDoc across `ResultAsync`, `fromThrowable*`, `ResultError`, `okAsync`/`errAsync` with clear "mappers must not throw" contracts and boundary guidance.
+- Updated GitHub Pages site (`index.html` + `api.html`) to document the new internal types and stricter mapper rules.
+- Added note in README about internal `Caught`/`Value` types.
+
+### Internal
+
+- All public boundary functions now route caught values through the explicit internal types.
+- Mapper methods (`map`, `mapErr`, `andThen`, `orElse`) on `ResultAsync` now explicitly cast through `Caught` in error paths (preparing for stricter "no throwing in mappers" contract in a future release).
+
 ## 0.4.0 — 2026-04-26
 
 ### Breaking Changes
