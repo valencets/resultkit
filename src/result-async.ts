@@ -2,6 +2,12 @@ import { ok, err } from './result.js'
 import type { Result } from './result.js'
 import type { Caught } from './internal-types.js'
 
+/**
+ * An async Result that is also `PromiseLike<Result<T, E>>`.
+ *
+ * Most transformation methods assume the callbacks do **not** throw.
+ * Use the containment helpers (`fromThrowableAsync`, `fromPromise`) at unsafe boundaries.
+ */
 export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
   private readonly _promise: Promise<Result<T, E>>
 
