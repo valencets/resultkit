@@ -26,8 +26,8 @@ export type {
 export { ResultError, isResultError } from './result-error.js'
 
 // Serialization
-export { resultToJSON, resultFromJSON } from './serialization.js'
-export type { ResultJSON } from './serialization.js'
+export { resultToJSON, resultFromJSON, parseResultJSON } from './serialization.js'
+export type { ResultJSON, ResultJSONParseError } from './serialization.js'
 
 // Type helpers
 export type { InferOkType, InferErrType } from './types.js'

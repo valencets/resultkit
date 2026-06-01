@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { ok, err } from '../result.js'
-import { resultToJSON, resultFromJSON } from '../serialization.js'
+import { resultToJSON, resultFromJSON, parseResultJSON } from '../serialization.js'
 
 describe('resultToJSON()', () => {
   it('serializes Ok', () => {
