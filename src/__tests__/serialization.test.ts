@@ -50,18 +50,30 @@ describe('resultFromJSON()', () => {
 })
 
 describe('parseResultJSON() strict untrusted parser', () => {
-  it('parses valid Ok', () => {
-    const r = parseResultJSON({ _tag: 'Ok', value: 42 })
-    expect(r.isOk()).toBe(true)
+  it('parses valid Ok and Err', () => {
+    const okResult = parseResultJSON<number, string>({ _tag: 'Ok', value: 42 })
+    const errResult = parseResultJSON<number, string>({ _tag: 'Err', error: 'boom' })
+
+    expect(okResult.isOk()).toBe(true)
+    expect(errResult.isErr()).toBe(true)
   })
 
-  it('returns typed Err for null value field (strict)', () => {
-    const r = parseResultJSON({ _tag: 'Ok', value: null })
+  it.each([
+    null,
+    undefined,
+    'not-json',
+    { _tag: 'Nope' },
+    { _tag: 'Ok' },
+    { _tag: 'Err' },
+    { _tag: 'Ok', value: undefined },
+    { _tag: 'Ok', value: null },
+    { _tag: 'Err', error: undefined },
+    { _tag: 'Err', error: null },
+  ])('returns typed Err for invalid input %o (strict)', (input) => {
+    const r = parseResultJSON<number, string>(input as any)
     expect(r.isErr()).toBe(true)
-  })
-
-  it('returns typed Err for undefined error field (strict)', () => {
-    const r = parseResultJSON({ _tag: 'Err', error: undefined })
-    expect(r.isErr()).toBe(true)
+    if (r.isErr()) {
+      expect(r.error.code).toBe('INVALID_RESULT_JSON')
+    }
   })
 })
