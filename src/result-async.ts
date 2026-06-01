@@ -167,10 +167,17 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
   }
 }
 
+/**
+ * Creates a successful `ResultAsync`.
+ */
 export function okAsync<T, E = never> (value: T): ResultAsync<T, E> {
   return new ResultAsync(Promise.resolve(ok<T, E>(value)))
 }
 
+/**
+ * Creates a failed `ResultAsync`.
+ * The error type defaults to `Caught` (anything that can be thrown or serialized).
+ */
 export function errAsync<T = never, E = Caught> (error: E): ResultAsync<T, E> {
   return new ResultAsync(Promise.resolve(err<T, E>(error)))
 }
