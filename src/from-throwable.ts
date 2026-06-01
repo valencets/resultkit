@@ -1,15 +1,16 @@
 import { ok, err } from './result.js'
 import type { Result } from './result.js'
+import type { Caught, FnArgs } from './internal-types.js'
 
-export function fromThrowable<A extends readonly unknown[], R, E> (
-  fn: (...args: A) => R,
-  errorFn: (e: unknown) => E
-): (...args: A) => Result<R, E> {
-  return (...args: A): Result<R, E> => {
+export function fromThrowable<Args extends FnArgs, R, E> (
+  fn: (...args: Args) => R,
+  errorFn: (cause: Caught) => E
+): (...args: Args) => Result<R, E> {
+  return (...args: Args): Result<R, E> => {
     try {
       return ok(fn(...args))
-    } catch (e: unknown) {
-      return err(errorFn(e))
+    } catch (cause) {
+      return err(errorFn(cause as Caught))
     }
   }
 }
