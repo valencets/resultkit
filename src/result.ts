@@ -31,7 +31,7 @@ export class Ok<T, E> {
 
   /** Maps over the error (no-op on Ok). */
   mapErr<F> (_fn: (error: E) => F): Result<T, F> {
-    return this as unknown as Ok<T, F>
+    return new Ok(this.value)
   }
 
   /** Chains another Result-returning function. */
@@ -41,7 +41,7 @@ export class Ok<T, E> {
 
   /** Provides a recovery Result on Err (no-op on Ok). */
   orElse<U, F> (_fn: (error: E) => Result<U, F>): Result<T | U, F> {
-    return this as unknown as Ok<T, F>
+    return new Ok(this.value)
   }
 
   /** Pattern match on the Result. */
@@ -108,7 +108,7 @@ export class Err<T, E> {
 
   /** No-op on Err (maps over success). */
   map<U> (_fn: (value: T) => U): Result<U, E> {
-    return this as unknown as Err<U, E>
+    return new Err(this.error)
   }
 
   /** Maps over the error value. */
@@ -118,7 +118,7 @@ export class Err<T, E> {
 
   /** No-op on Err (chains on success). */
   andThen<U, F> (_fn: (value: T) => Result<U, F>): Result<U, E | F> {
-    return this as unknown as Err<U, E | F>
+    return new Err(this.error)
   }
 
   /** Chains a recovery function on Err. */
