@@ -1,8 +1,7 @@
 import type { Value } from './internal-types.js'
 
 /**
- * A structured error with a `code` and optional context.
- * Intended for use with `matchOn` on the `code` field.
+ * A structured, branded error with a `code` for use with `matchOn(error, "code", ...)`.
  *
  * The `context` is typed as `Value` (anything that can be safely serialized or caught).
  */
