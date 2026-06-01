@@ -3,18 +3,18 @@ import type { Result } from './result.js'
 import { ResultAsync } from './result-async.js'
 import type { Value } from './internal-types.js'
 
-type CombineOkTypes<T extends readonly Result<unknown, unknown>[]> = {
-  [K in keyof T]: T[K] extends Result<infer U, unknown> ? U : never
+type CombineOkTypes<T extends readonly Result<unknown, Value>[]> = {
+  [K in keyof T]: T[K] extends Result<infer U, Value> ? U : never
 }
 
-type CombineErrTypes<T extends readonly Result<unknown, unknown>[]> =
-  T[number] extends Result<unknown, infer E> ? E : never
+type CombineErrTypes<T extends readonly Result<unknown, Value>[]> =
+  T[number] extends Result<Value, infer E> ? E : never
 
 /**
  * Combines an array of Results into a single Result containing an array of successes,
  * or the first error encountered.
  */
-export function combine<T extends readonly Result<unknown, unknown>[]> (
+export function combine<T extends readonly Result<unknown, Value>[]> (
   results: readonly [...T]
 ): Result<CombineOkTypes<T>, CombineErrTypes<T>> {
   const values: Value[] = []
@@ -25,17 +25,17 @@ export function combine<T extends readonly Result<unknown, unknown>[]> (
   return ok(values) as Result<CombineOkTypes<T>, CombineErrTypes<T>>
 }
 
-type CombineAsyncOkTypes<T extends readonly ResultAsync<unknown, unknown>[]> = {
-  [K in keyof T]: T[K] extends ResultAsync<infer U, unknown> ? U : never
+type CombineAsyncOkTypes<T extends readonly ResultAsync<unknown, Value>[]> = {
+  [K in keyof T]: T[K] extends ResultAsync<infer U, Value> ? U : never
 }
 
-type CombineAsyncErrTypes<T extends readonly ResultAsync<unknown, unknown>[]> =
-  T[number] extends ResultAsync<unknown, infer E> ? E : never
+type CombineAsyncErrTypes<T extends readonly ResultAsync<unknown, Value>[]> =
+  T[number] extends ResultAsync<Value, infer E> ? E : never
 
 /**
  * Async version of `combine`.
  */
-export function combineAsync<T extends readonly ResultAsync<unknown, unknown>[]> (
+export function combineAsync<T extends readonly ResultAsync<unknown, Value>[]> (
   results: readonly [...T]
 ): ResultAsync<CombineAsyncOkTypes<T>, CombineAsyncErrTypes<T>> {
   return new ResultAsync(
