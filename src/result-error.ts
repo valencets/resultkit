@@ -1,8 +1,10 @@
-export class ResultError<Code extends string = string> extends Error {
-  readonly code: Code
-  readonly context?: unknown
+import type { Value } from './internal-types.js'
 
-  constructor (code: Code, message: string, context?: unknown) {
+export class ResultError<Code extends string = string, Context extends Value = Value> extends Error {
+  readonly code: Code
+  readonly context?: Context | undefined
+
+  constructor (code: Code, message: string, context?: Context) {
     super(message)
     this.name = 'ResultError'
     this.code = code
@@ -10,6 +12,6 @@ export class ResultError<Code extends string = string> extends Error {
   }
 }
 
-export function isResultError (value: unknown): value is ResultError<string> {
+export function isResultError (value: Value): value is ResultError<string> {
   return value instanceof ResultError
 }

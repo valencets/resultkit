@@ -1,6 +1,7 @@
 import { describe, it, expectTypeOf } from 'vitest'
 import { ok, err, fromThrowable, fromNullable, combine, match, ResultError, isResultError, ResultAsync } from '../index.js'
 import type { Result, InferOkType, InferErrType } from '../index.js'
+import type { Value } from '../internal-types.js'
 
 describe('docs type claims', () => {
   it('ok returns Ok<T, never>', () => {
@@ -45,9 +46,9 @@ describe('docs type claims', () => {
   })
 
   it('isResultError narrows unknown to ResultError', () => {
-    const unk: unknown = new ResultError('X', 'x')
+    const unk: Value = new ResultError('X', 'x')
     if (isResultError(unk)) {
-      expectTypeOf(unk).toEqualTypeOf<ResultError<string>>()
+      expectTypeOf(unk).toEqualTypeOf<ResultError<string, Value>>()
     }
   })
 

@@ -2,6 +2,7 @@ import { describe, it, expect, expectTypeOf } from 'vitest'
 import { ResultError, isResultError } from '../result-error.js'
 import { err } from '../result.js'
 import { matchOn } from '../match.js'
+import type { Value } from '../internal-types.js'
 
 describe('ResultError', () => {
   it('creates a branded error with code and message', () => {
@@ -59,9 +60,9 @@ describe('isResultError()', () => {
   })
 
   it('narrows type', () => {
-    const e: unknown = new ResultError('TEST', 'test')
+    const e: Value = new ResultError('TEST', 'test')
     if (isResultError(e)) {
-      expectTypeOf(e).toEqualTypeOf<ResultError<string>>()
+      expectTypeOf(e).toEqualTypeOf<ResultError<string, Value>>()
       expect(e.code).toBe('TEST')
     }
   })
