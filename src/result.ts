@@ -1,5 +1,5 @@
 import { ResultAsync } from './result-async.js'
-import type { Value } from './internal-types.js'
+import type { Caught, Value } from './internal-types.js'
 
 export type Result<T, E> = Ok<T, E> | Err<T, E>
 
@@ -151,10 +151,17 @@ function getMessageSuffix (value: Value): string {
   }
 }
 
+/**
+ * Creates a successful `Ok` result.
+ */
 export function ok<T, E = never> (value: T): Ok<T, E> {
   return new Ok(value)
 }
 
-export function err<T = never, E = unknown> (error: E): Err<T, E> {
+/**
+ * Creates a failed `Err` result.
+ * The error type defaults to `Caught` (anything that can be thrown or serialized).
+ */
+export function err<T = never, E = Caught> (error: E): Err<T, E> {
   return new Err(error)
 }
