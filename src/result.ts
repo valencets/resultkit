@@ -1,4 +1,5 @@
 import { ResultAsync } from './result-async.js'
+import type { Value } from './internal-types.js'
 
 export type Result<T, E> = Ok<T, E> | Err<T, E>
 
@@ -61,7 +62,8 @@ export class Ok<T, E> {
   }
 
   unwrapErr (): never {
-    throw new Error('Called unwrapErr on an Ok value', { cause: this.value })
+    const suffix = getMessageSuffix(this.value as Value)
+    throw new Error(`Called unwrapErr on an Ok value${suffix}`, { cause: this.value })
   }
 
   toAsync (): ResultAsync<T, E> {
@@ -124,7 +126,7 @@ export class Err<T, E> {
   }
 
   unwrap (): never {
-    const suffix = typeof this.error === 'string' ? `: ${this.error}` : ''
+    const suffix = getMessageSuffix(this.error as Value)
     throw new Error(`Called unwrap on an Err value${suffix}`, { cause: this.error })
   }
 
@@ -134,6 +136,18 @@ export class Err<T, E> {
 
   toAsync (): ResultAsync<T, E> {
     return new ResultAsync(Promise.resolve(this as Result<T, E>))
+  }
+}
+
+function getMessageSuffix (value: Value): string {
+  if (typeof value === 'string') {
+    return `: ${value}`
+  }
+  // eslint-disable-next-line no-restricted-syntax -- intentional defensive fallback for error messages
+  try {
+    return `: ${JSON.stringify(value)}`
+  } catch {
+    return ''
   }
 }
 
