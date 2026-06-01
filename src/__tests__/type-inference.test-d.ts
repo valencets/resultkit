@@ -3,6 +3,7 @@ import { ok, err, Ok, Err } from '../result.js'
 import type { Result } from '../result.js'
 import { okAsync, errAsync, ResultAsync } from '../result-async.js'
 import { fromThrowable } from '../from-throwable.js'
+import { fromNullable } from '../from-nullable.js'
 import type { InferOkType, InferErrType } from '../types.js'
 
 describe('ok() type inference', () => {
@@ -67,6 +68,13 @@ describe('transformation error type preservation', () => {
       ok<string, 'CHAIN_ERROR'>(`${value}`)
     )
     expectTypeOf(result).toEqualTypeOf<Result<string, 'INPUT_ERROR' | 'CHAIN_ERROR'>>()
+  })
+})
+
+describe('fromNullable type inference', () => {
+  it('strips null and undefined from Ok type', () => {
+    const result = fromNullable<string | null | undefined, 'MISSING'>('hello', 'MISSING')
+    expectTypeOf(result).toEqualTypeOf<Result<string, 'MISSING'>>()
   })
 })
 
