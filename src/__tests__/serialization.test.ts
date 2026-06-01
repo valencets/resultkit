@@ -48,3 +48,20 @@ describe('resultFromJSON()', () => {
     expect(() => resultFromJSON({ value: 42 })).toThrow('Invalid Result JSON')
   })
 })
+
+describe('parseResultJSON() strict untrusted parser', () => {
+  it('parses valid Ok', () => {
+    const r = parseResultJSON({ _tag: 'Ok', value: 42 })
+    expect(r.isOk()).toBe(true)
+  })
+
+  it('returns typed Err for null value field (strict)', () => {
+    const r = parseResultJSON({ _tag: 'Ok', value: null })
+    expect(r.isErr()).toBe(true)
+  })
+
+  it('returns typed Err for undefined error field (strict)', () => {
+    const r = parseResultJSON({ _tag: 'Err', error: undefined })
+    expect(r.isErr()).toBe(true)
+  })
+})
