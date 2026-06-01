@@ -65,37 +65,37 @@ describe('ResultAsync.fromSafePromise()', () => {
   })
 })
 
-describe('error capture in callbacks', () => {
-  it('map captures synchronous throw as rejected promise', async () => {
-    const result = await okAsync(5).map(() => { throw new Error('boom') })
-    expect(result.isErr()).toBe(true)
-    if (result.isErr()) {
-      expect(result.error).toBeInstanceOf(Error)
-    }
+describe('ResultAsync mapper strict contract (no catching)', () => {
+  it('does not catch throws inside .map() (strict contract)', async () => {
+    await expect(
+      okAsync(5).map(() => {
+        throw new Error('map failed')
+      })
+    ).rejects.toThrow('map failed')
   })
 
-  it('mapErr captures synchronous throw as rejected promise', async () => {
-    const result = await errAsync('bad').mapErr(() => { throw new Error('boom') })
-    expect(result.isErr()).toBe(true)
-    if (result.isErr()) {
-      expect(result.error).toBeInstanceOf(Error)
-    }
+  it('does not catch throws inside .mapErr() (strict contract)', async () => {
+    await expect(
+      errAsync('bad').mapErr(() => {
+        throw new Error('mapErr failed')
+      })
+    ).rejects.toThrow('mapErr failed')
   })
 
-  it('andThen captures synchronous throw as Err', async () => {
-    const result = await okAsync(5).andThen(() => { throw new Error('boom') })
-    expect(result.isErr()).toBe(true)
-    if (result.isErr()) {
-      expect(result.error).toBeInstanceOf(Error)
-    }
+  it('does not catch throws inside .andThen() (strict contract)', async () => {
+    await expect(
+      okAsync(5).andThen(() => {
+        throw new Error('andThen failed')
+      })
+    ).rejects.toThrow('andThen failed')
   })
 
-  it('orElse captures synchronous throw as Err', async () => {
-    const result = await errAsync('bad').orElse(() => { throw new Error('boom') })
-    expect(result.isErr()).toBe(true)
-    if (result.isErr()) {
-      expect(result.error).toBeInstanceOf(Error)
-    }
+  it('does not catch throws inside .orElse() (strict contract)', async () => {
+    await expect(
+      errAsync('bad').orElse(() => {
+        throw new Error('orElse failed')
+      })
+    ).rejects.toThrow('orElse failed')
   })
 })
 
