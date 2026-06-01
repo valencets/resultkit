@@ -224,11 +224,12 @@ The `unwrap` / `unwrapErr` rules are extracted into a separate `assertionRules` 
 ## Design Principles
 
 1. **Every error is typed.** No `unknown` leaking through your codebase. `errorFn` is required on every boundary function.
-2. **Pattern matching is the primary control flow.** `match()` and `matchOn()` replace `switch`, `if/else` chains, and ad-hoc property checks.
-3. **The library is a workflow.** The eslint preset makes the discipline enforceable, not optional.
-4. **Strict by default.** Permissive escape hatches exist (`unwrap`, `as unknown`) but the tooling flags them.
+2. **Mappers are pure.** Transformation methods (`map`, `mapErr`, `andThen`, `orElse`) on `Result` and `ResultAsync` **must not throw**. Any fallible work must go through explicit boundary functions (`fromThrowable*`, `fromPromise`, etc.).
+3. **Pattern matching is the primary control flow.** `match()` and `matchOn()` replace `switch`, `if/else` chains, and ad-hoc property checks.
+4. **The library is a workflow.** The eslint preset makes the discipline enforceable, not optional.
+5. **Strict by default.** Permissive escape hatches exist (`unwrap`, `as unknown`) but the tooling flags them.
 
-The library exposes `Caught` and `Value` types internally (not re-exported) to make boundary contracts explicit. These are used by `fromThrowable*`, `ResultError`, and error paths in `ResultAsync`.
+The library maintains internal types (`Caught`, `Value`, `FnArgs`) that are not re-exported. These are used consistently inside all boundary functions and error paths so the contract "this can receive anything that can be thrown or serialized" is explicit in the source.
 
 ## Requirements
 
