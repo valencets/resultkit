@@ -10,6 +10,7 @@ import type { Caught, FnArgs } from './internal-types.js'
  *
  * @param fn - The function to wrap.
  * @param errorFn - Maps any thrown value into your error type.
+ * @returns A new function that returns `Result<T, E>`.
  */
 export function fromThrowable<Args extends FnArgs, R, E> (
   fn: (...args: Args) => R,
@@ -19,6 +20,7 @@ export function fromThrowable<Args extends FnArgs, R, E> (
     try {
       return ok(fn(...args))
     } catch (cause) {
+      // Safe: Caught is intentionally the broadest possible type for thrown values
       return err(errorFn(cause as Caught))
     }
   }
