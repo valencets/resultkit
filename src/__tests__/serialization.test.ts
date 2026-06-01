@@ -47,6 +47,10 @@ describe('resultFromJSON()', () => {
   it('throws on missing tag', () => {
     expect(() => resultFromJSON({ value: 42 })).toThrow('Invalid Result JSON')
   })
+
+  it('throws on invalid input that parseResultJSON would reject (strict)', () => {
+    expect(() => resultFromJSON({ _tag: 'Ok', value: null })).toThrow('Invalid Result JSON')
+  })
 })
 
 describe('parseResultJSON() strict untrusted parser', () => {
