@@ -87,4 +87,24 @@ describe('combineAsync()', () => {
       expect(result.value).toEqual([])
     }
   })
+
+  it('works with ResultAsync produced by map / andThen (exercises PromiseLike contract)', async () => {
+    const a1 = okAsync(1).map(x => x * 10)
+    const a2 = okAsync(2).map(x => x * 10)
+    const result = await combineAsync([a1, a2])
+    expect(result.isOk()).toBe(true)
+    if (result.isOk()) {
+      expect(result.value).toEqual([10, 20])
+    }
+  })
+
+  it('propagates errors from mapped ResultAsync', async () => {
+    const okPart = okAsync('hello').map(s => s.length)
+    const errPart = errAsync<number, 'boom'>('boom')
+    const result = await combineAsync([okPart, errPart])
+    expect(result.isErr()).toBe(true)
+    if (result.isErr()) {
+      expect(result.error).toBe('boom')
+    }
+  })
 })

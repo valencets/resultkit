@@ -38,8 +38,10 @@ type CombineAsyncErrTypes<T extends readonly ResultAsync<unknown, Value>[]> =
 export function combineAsync<T extends readonly ResultAsync<unknown, Value>[]> (
   results: readonly [...T]
 ): ResultAsync<CombineAsyncOkTypes<T>, CombineAsyncErrTypes<T>> {
+  // Leverage that ResultAsync implements PromiseLike<Result<...>> so Promise.all
+  // directly yields the settled Results without an extra async wrapper layer.
   return __createResultAsync(
-    Promise.all(results.map(async (r) => r)).then(
+    Promise.all(results).then(
       (settled) => combine(settled) as unknown as Result<CombineAsyncOkTypes<T>, CombineAsyncErrTypes<T>>
     )
   )
