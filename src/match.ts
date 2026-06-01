@@ -1,9 +1,15 @@
 // ── match() ──────────────────────────────────────────────────────────────────
 
-// Partial with _ (checked first — if _ present, this matches)
+/**
+ * Exhaustive (or partial with fallback) string matching.
+ *
+ * Throws if no handler matches and no `_` fallback is provided.
+ */
+
+// Partial with _ (checked first)
 export function match<V extends string, R> (
   value: V,
-  handlers: { readonly [K in V]?: (value: K) => R } & { readonly _: (value: V) => R }
+  handlers: Partial<Record<V | "_", (value: V) => R>>
 ): R
 
 // Exhaustive (all keys required, no _)
@@ -23,6 +29,12 @@ export function match (value: string, handlers: Record<string, unknown>): unknow
 }
 
 // ── matchOn() ─────────────────────────────────────────────────────────────────
+
+/**
+ * Exhaustive (or partial with fallback) discriminated union matching by a specific key.
+ *
+ * Throws if no handler matches and no `_` fallback is provided.
+ */
 
 // Partial with _ (checked first)
 export function matchOn<T extends Record<K, string>, K extends string, R> (
