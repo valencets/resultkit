@@ -61,14 +61,14 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
    * Use `.andThen()` + explicit `err()`/`errAsync()`, or wrap fallible work with
    * `fromThrowableAsync`.
    */
-  map<U> (fn: (value: T) => U | Promise<U>): ResultAsync<U, E> {
+  map<U> (fn: (value: T) => U | PromiseLike<U>): ResultAsync<U, E> {
     return __createResultAsync(
       this._promise.then(async (result) => {
         if (result.isErr()) {
           return err<U, E>(result.error)
         }
-        const mapped = fn(result.value)
-        const resolved = mapped instanceof Promise ? await mapped : mapped
+        // Always await (Promise.resolve handles plain values + any PromiseLike uniformly).
+        const resolved = await fn(result.value)
         return ok<U, E>(resolved)
       })
     )
@@ -81,14 +81,14 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
    * Use `.andThen()` + explicit `err()`/`errAsync()`, or wrap fallible work with
    * `fromThrowableAsync`.
    */
-  mapErr<F> (fn: (error: E) => F | Promise<F>): ResultAsync<T, F> {
+  mapErr<F> (fn: (error: E) => F | PromiseLike<F>): ResultAsync<T, F> {
     return __createResultAsync(
       this._promise.then(async (result) => {
         if (result.isOk()) {
           return ok<T, F>(result.value)
         }
-        const mapped = fn(result.error)
-        const resolved = mapped instanceof Promise ? await mapped : mapped
+        // Always await (Promise.resolve handles plain values + any PromiseLike uniformly).
+        const resolved = await fn(result.error)
         return err<T, F>(resolved)
       })
     )

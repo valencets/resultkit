@@ -98,6 +98,22 @@ describe('ResultAsync mapper strict contract (no catching)', () => {
       })
     ).rejects.toThrow('orElse failed')
   })
+
+  it('properly awaits custom PromiseLike (not just native Promise) returned from mappers', async () => {
+    // A minimal thenable that is NOT instanceof Promise.
+    const customThenable = {
+      then (onFulfilled: (v: number) => void) {
+        onFulfilled(42)
+        return this
+      }
+    } as unknown as PromiseLike<number>
+
+    const result = await okAsync(1).map(() => customThenable)
+    expect(result.isOk()).toBe(true)
+    if (result.isOk()) {
+      expect(result.value).toBe(42) // not the thenable object itself
+    }
+  })
 })
 
 describe('PromiseLike conformance', () => {
