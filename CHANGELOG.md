@@ -18,6 +18,14 @@
 - All public boundary functions now route caught values through the explicit internal types.
 - Mapper methods (`map`, `mapErr`, `andThen`, `orElse`) on `ResultAsync` now explicitly cast through `Caught` in error paths (preparing for stricter "no throwing in mappers" contract in a future release).
 
+### Strictness & Soundness Improvements (ported from vendor work)
+
+- `ResultAsync` mappers (`map`/`mapErr`/`andThen`/`orElse`) no longer catch thrown values — they now reject (only explicit boundary functions perform containment).
+- `parseResultJSON` (untrusted parser) now strictly rejects `null`/`undefined` in `value`/`error` fields and returns a typed `ResultJSONParseError`.
+- `fromThrowableAsync` now supports functions that return values synchronously and uses the internal factory for consistency.
+- Various no-op paths in `Ok`/`Err` and boundary helpers aligned for clarity and `Caught` safety comments.
+- Improved JSDoc and type helper documentation across core modules.
+
 ## 0.4.0 — 2026-04-26
 
 ### Breaking Changes
