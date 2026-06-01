@@ -194,9 +194,11 @@ export default [
 
 ### What it enforces
 
-Three flat-config presets are exported. `strict` (errors) and `recommended` (warnings) share the same core error-handling rules; `opinionated` extends `strict` with stylistic rules that are unrelated to the error-handling thesis.
+Three flat-config presets are exported. `strict` (errors) and `recommended` (warnings) share the same core error-handling rules. `opinionated` extends `strict` with stylistic rules unrelated to error handling.
 
-**Core (strict / recommended):**
+The `unwrap` / `unwrapErr` rules are extracted into a separate `assertionRules` set (treated as terminal assertions). Both `strict` and `recommended` include them.
+
+**Core rules (strict / recommended):**
 
 | Rule | Rationale |
 |------|-----------|
@@ -206,7 +208,12 @@ Three flat-config presets are exported. `strict` (errors) and `recommended` (war
 | Ban `.catch()` | Use `ResultAsync.fromPromise()` |
 | Ban `.finally()` | Use `.tap()` for cleanup |
 | Ban `enum` | Use const unions with `match()` |
-| Warn `.unwrap()` / `.unwrapErr()` | Prefer `.match()` or `.unwrapOr()` — override in test files |
+
+**Assertion rules (included in strict + recommended):**
+
+| Rule | Rationale |
+|------|-----------|
+| `unwrap()` / `unwrapErr()` | Terminal assertions — prefer `match()` or `unwrapOr()` in normal code |
 
 **Opinionated (adds):**
 
@@ -220,6 +227,8 @@ Three flat-config presets are exported. `strict` (errors) and `recommended` (war
 2. **Pattern matching is the primary control flow.** `match()` and `matchOn()` replace `switch`, `if/else` chains, and ad-hoc property checks.
 3. **The library is a workflow.** The eslint preset makes the discipline enforceable, not optional.
 4. **Strict by default.** Permissive escape hatches exist (`unwrap`, `as unknown`) but the tooling flags them.
+
+The library exposes `Caught` and `Value` types internally (not re-exported) to make boundary contracts explicit. These are used by `fromThrowable*`, `ResultError`, and error paths in `ResultAsync`.
 
 ## Requirements
 
