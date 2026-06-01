@@ -3,6 +3,12 @@ import type { Result } from './result.js'
 import { ResultAsync } from './result-async.js'
 import type { Value } from './internal-types.js'
 
+/**
+ * Combines an array of Results into a single Result containing an array of successes,
+ * or the first error encountered.
+ */
+export function combine<T extends readonly Result<unknown, unknown>[]> (
+
 type CombineOkTypes<T extends readonly Result<unknown, unknown>[]> = {
   [K in keyof T]: T[K] extends Result<infer U, unknown> ? U : never
 }
@@ -10,6 +16,10 @@ type CombineOkTypes<T extends readonly Result<unknown, unknown>[]> = {
 type CombineErrTypes<T extends readonly Result<unknown, unknown>[]> =
   T[number] extends Result<unknown, infer E> ? E : never
 
+/**
+ * Combines an array of Results into a single Result containing an array of successes,
+ * or the first error encountered.
+ */
 export function combine<T extends readonly Result<unknown, unknown>[]> (
   results: readonly [...T]
 ): Result<CombineOkTypes<T>, CombineErrTypes<T>> {
@@ -28,6 +38,9 @@ type CombineAsyncOkTypes<T extends readonly ResultAsync<unknown, unknown>[]> = {
 type CombineAsyncErrTypes<T extends readonly ResultAsync<unknown, unknown>[]> =
   T[number] extends ResultAsync<unknown, infer E> ? E : never
 
+/**
+ * Async version of `combine`.
+ */
 export function combineAsync<T extends readonly ResultAsync<unknown, unknown>[]> (
   results: readonly [...T]
 ): ResultAsync<CombineAsyncOkTypes<T>, CombineAsyncErrTypes<T>> {
