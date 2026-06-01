@@ -110,6 +110,8 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
         }
         const next = fn(result.value)
         if (next instanceof ResultAsync) {
+          // Allowed internal peek at the settled promise for chaining.
+          // This is the main remaining direct field access after the factory discipline cleanup.
           return next._promise
         }
         return next as Result<U, E | F>
@@ -133,6 +135,8 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
         }
         const next = fn(result.error)
         if (next instanceof ResultAsync) {
+          // Allowed internal peek at the settled promise for chaining.
+          // This is the main remaining direct field access after the factory discipline cleanup.
           return next._promise
         }
         return next as Result<T | U, F>
@@ -140,6 +144,14 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     )
   }
 
+  /**
+   * Runs a side-effect callback on the success value (fire-and-forget).
+   *
+   * The callback must **not** throw. Throwing will cause the returned
+   * ResultAsync's promise to reject (consistent with the strict mapper contract
+   * introduced in this version). For fallible side effects, wrap with
+   * `fromThrowable` / `fromThrowableAsync` or use `.andThen()`.
+   */
   tap (fn: (value: T) => void): ResultAsync<T, E> {
     return __createResultAsync(
       this._promise.then((result) => {
@@ -149,6 +161,14 @@ export class ResultAsync<T, E> implements PromiseLike<Result<T, E>> {
     )
   }
 
+  /**
+   * Runs a side-effect callback on the error value (fire-and-forget).
+   *
+   * The callback must **not** throw. Throwing will cause the returned
+   * ResultAsync's promise to reject (consistent with the strict mapper contract
+   * introduced in this version). For fallible side effects, wrap with
+   * `fromThrowable` / `fromThrowableAsync` or use `.orElse()`.
+   */
   tapErr (fn: (error: E) => void): ResultAsync<T, E> {
     return __createResultAsync(
       this._promise.then((result) => {

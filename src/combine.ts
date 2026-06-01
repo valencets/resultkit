@@ -20,6 +20,9 @@ export function combine<T extends readonly Result<unknown, Value>[]> (
   const values: Value[] = []
   for (const result of results) {
     if (result.isErr()) return err(result.error) as Result<CombineOkTypes<T>, CombineErrTypes<T>>
+    // The `as Value` cast is required for the Value[] widening trick that
+    // enables good error-position inference in the Combine*Types helpers.
+    // See internal-types.ts for rationale.
     values.push(result.value as Value)
   }
   return ok(values) as Result<CombineOkTypes<T>, CombineErrTypes<T>>
