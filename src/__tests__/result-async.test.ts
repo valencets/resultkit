@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { okAsync, errAsync, ResultAsync } from '../result-async.js'
+import { ok } from '../result.js'
 
 describe('okAsync()', () => {
   it('creates an async Ok', async () => {
@@ -115,4 +116,10 @@ describe('PromiseLike conformance', () => {
       expect(result.value).toBe(7)
     }
   })
+})
+
+it('cannot be constructed directly from outside the module (regression)', () => {
+  // @ts-expect-error - Constructor is private / internal only
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _bad = new ResultAsync(Promise.resolve(ok(42)))
 })
