@@ -3,8 +3,12 @@ import { err } from './result.js'
 import type { Caught, FnArgs } from './internal-types.js'
 
 /**
- * Wraps an async function so that any thrown/rejected values are converted into typed Errs.
- * The errorFn receives a Caught value.
+ * Wraps a function (sync or async) so that any thrown/rejected values are converted into typed `Err`s.
+ *
+ * The `errorFn` receives a `Caught` value for both synchronous throws and promise rejections.
+ *
+ * @param fn - The function to wrap. Can return a value or a Promise.
+ * @param errorFn - Maps any thrown or rejected value into your error type.
  */
 export function fromThrowableAsync<Args extends FnArgs, R, E> (
   fn: (...args: Args) => Promise<R>,
